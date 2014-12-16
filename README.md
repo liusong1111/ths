@@ -12,6 +12,6 @@
 # 生产环境运行
 
     #打包
-    lein production ring uberjar
+    lein ring uberjar
     #执行
     java -jar target/ths-0.1.0-SNAPSHOT-standalone.jar
