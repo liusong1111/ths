@@ -6,14 +6,14 @@
     {"code":"ok","user":{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}}
 # 用户管理
 
-## 得到用户列表
+## 得到用户列表(TODO: labels)
     curl http://127.0.0.1:3000/users.json
     # 返回格式例如：
     HTTP STATUS: 200
     HTTP BODY:
     [{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}]
 
-## 注册用户
+## 注册用户(TODO: last-insert-row-id:2)
     POST /users.json
     curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/users.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\",\"email\":\"liusong1111@gmail.com\",\"phone\":\"15522602848\"}"
     #返回格式例如：
