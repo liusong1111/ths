@@ -1,7 +1,9 @@
 (ns ths.routes
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            ;[ring.middleware.json :refer [wrap-json-params wrap-json-response]]
+            [ring.middleware.format :refer [wrap-restful-format]]
             [com.postspectacular.rotor :as rotor]
             [clojure.java.io :as io]
             [taoensso.timbre :as timbre]
@@ -27,14 +29,34 @@
 (defn destroy []
   (timbre/info "TongHang Server is shutting down"))
 
+(defn login [username password]
+  (let [user (m/auth username password)]
+    (if user
+      (json-response {
+                      :code "ok"
+                      :user user
+                      })
+      {:status  401
+       :headers {}
+       :body    ""}
+      ))
+  )
+
+
 (defn users-index []
   (json-response (m/users-all)))
 
 (defroutes app-routes
            (GET "/" [] "Hello World")
            ; http://d1.apk8.com:8020/game_m/zhaotonglei.apk
-           (GET "/api/users" [] (users-index))
+           (POST "/login.json" [username password] (login username password))
+           (GET "/users.json" [] (users-index))
            (route/not-found "Not Found"))
 
 (def app
-  (wrap-defaults app-routes site-defaults))
+  (->
+    (wrap-defaults app-routes api-defaults)
+    ;(wrap-json-params {:keywords? true :bigdecimals? true})
+    (wrap-restful-format)
+    )
+  )

@@ -22,5 +22,12 @@
 (defentity user_labels (database db-spec))
 
 
+(defn auth [username password]
+  (first (select users
+                 (where {:username username
+                         :password password})
+                 (limit 1)))
+  )
+
 (defn users-all []
   (select users))
