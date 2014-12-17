@@ -58,8 +58,17 @@
 (defn users-destroy [id]
   (json-response (m/users-destroy id)))
 
+(defn labels-index []
+  (json-response (m/labels-index)))
+
 (defroutes app-routes
            (GET "/" [] "Hello World")
+
+           (GET "/demo.json" [] (json-response {:code "OK" :message "welcome"}))
+           (POST "/demo.json" [name] (json-response {:code "OK" :message (str "created:" name)}))
+           (PUT "/demo.json" [name] (json-response {:code "OK" :message (str "updated:" name)}))
+           (DELETE "/demo.json" [name] (json-response {:code "OK" :message (str "deleted:" name)}))
+
            ; http://d1.apk8.com:8020/game_m/zhaotonglei.apk
            (POST "/login.json" [username password] (login username password))
            (GET "/users.json" [] (users-index))
@@ -67,6 +76,8 @@
            (PUT "/users/:id.json" [id username password email phone] (users-update id username password email phone))
            (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
            (DELETE "/users/:id.json" [id] (users-destroy id))
+
+           (GET "/labels" [] labels-index)
            (route/not-found "Not Found"))
 
 (def app

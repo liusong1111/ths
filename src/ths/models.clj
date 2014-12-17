@@ -68,7 +68,10 @@
   (delete user_labels
           (where {:user_id id})))
 
+;; labels
 
+(defn labels-index []
+  (select labels))
 
 
 (defn users-all []
