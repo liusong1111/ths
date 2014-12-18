@@ -55,10 +55,9 @@
 
 ;(defn -main []
 ;  (println (String. (base64/decode (.getBytes "aGVsbG8=") )) ))
-
-; "2;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"
+; "1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"
 (defn -main []
-  (println (generate-login-token 2 "liusong1111@gmail.com")))
+  (println (generate-login-token 1 "liusong1111@gmail.com")))
 
-(defn -main []
-  (println (parse-login-token "2;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0")))
+;(defn -main []
+;  (println (parse-login-token "1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0")))

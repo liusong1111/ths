@@ -103,7 +103,7 @@
 
 ## 发表话题
     POST /topics.json
-    curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/topics.json -d "{\"subject\":\"清蒸鲈鱼怎么做？\",\"body\":\"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。\",\"label_name\":\"美食\"}"
+    curl -X POST -H "Content-Type:application/json" -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0" http://127.0.0.1:3000/topics.json -d "{\"subject\":\"清蒸鲈鱼怎么做？\",\"body\":\"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。\",\"label_name\":\"美食\"}"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
@@ -133,7 +133,7 @@
     [{"id":5,"topic_id":2,"body":"爱怎么做怎么做","user_id":null},{"id":6,"topic_id":2,"body":"爱怎么做怎么做","user_id":null},{"id":7,"topic_id":2,"body":"爱怎么做怎么做","user_id":null}]
 
 ## 发表回复
-    curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/topics/2/replies.json -d "{\"body\":\"爱怎么做怎么做\"}"
+    curl -X POST -H "Content-Type:application/json" -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0" http://127.0.0.1:3000/topics/1/replies.json -d "{\"body\":\"爱怎么做怎么做\"}"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
