@@ -21,7 +21,7 @@ CREATE TABLE topics (
   subject    char(255),
   body       TEXT,
   label_name char(255),
-  creator_id INTEGER,
+  user_id INTEGER,
   created_at timestamp DEFAULT current_timestamp
 );
 

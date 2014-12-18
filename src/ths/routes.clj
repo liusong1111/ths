@@ -34,7 +34,7 @@
     (if user
       (json-response {
                       :code         "ok"
-                      :token        (generate-login-token email)
+                      :token        (generate-login-token (:id user) email)
                       :huanxin_user (generate-huanxin-username email)
                       :user         user
                       })
@@ -45,8 +45,8 @@
   )
 
 ;; users
-(defn users-index []
-  (json-response (m/users-all)))
+(defn users-index [q label_name page]
+  (json-response (m/users-all q label_name page)))
 
 (defn users-create [username password email phone]
   (json-response (m/users-create username password email phone)))
@@ -71,11 +71,11 @@
   (json-response (m/labels-destroy label_name)))
 
 ;; topics
-(defn topics-index []
+(defn topics-index [current_user_id]
   (json-response (m/topics-index)))
 
-(defn topics-create [subject body label_name]
-  (json-response (m/topics-create subject body label_name)))
+(defn topics-create [current_user_id subject body label_name]
+  (json-response (m/topics-create current_user_id subject body label_name)))
 
 (defn topics-update [id subject body label_name]
   (json-response (m/topics-update id subject body label_name)))
@@ -87,8 +87,8 @@
 (defn topic-replies-index [topic_id]
   (json-response (m/topic-replies-index topic_id)))
 
-(defn topic-replies-create [topic_id body]
-  (json-response (m/topic-replies-create topic_id body)))
+(defn topic-replies-create [current_user_id topic_id body]
+  (json-response (m/topic-replies-create current_user_id topic_id body)))
 
 (defn topic-replies-update [topic_id reply_id body]
   (json-response (m/topic-replies-update topic_id reply_id body)))
@@ -99,7 +99,7 @@
 (defroutes app-routes
            (GET "/" [] "Hello World")
 
-           (GET "/demo.json" [current_email] (json-response {:code "OK" :message (str "welcome:" current_email)}))
+           (GET "/demo.json" [current_user_email] (json-response {:code "OK" :message (str "welcome:" current_user_email)}))
            (POST "/demo.json" [name] (json-response {:code "OK" :message (str "created:" name)}))
            (PUT "/demo.json" [name] (json-response {:code "OK" :message (str "updated:" name)}))
            (DELETE "/demo.json" [name] (json-response {:code "OK" :message (str "deleted:" name)}))
@@ -108,7 +108,7 @@
            (POST "/login.json" [email password] (login email password))
 
            ;; users
-           (GET "/users.json" [] (users-index))
+           (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
            (POST "/users.json" [username password email phone] (users-create username password email phone))
            (PUT "/users/:id.json" [id username password email phone] (users-update id username password email phone))
            (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
@@ -120,14 +120,14 @@
            (DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
 
            ;; topics
-           (GET "/topics.json" [] (topics-index))
-           (POST "/topics.json" [subject body label_name] (topics-create subject body label_name))
+           (GET "/topics.json" [current_user_id] (topics-index current_user_id))
+           (POST "/topics.json" [current_user_id subject body label_name] (topics-create current_user_id subject body label_name))
            (PUT "/topics/:id.json" [id subject body label_name] (topics-update id subject body label_name))
            (DELETE "/topics/:id.json" [id] (topics-destroy id))
 
            ;; replies
            (GET "/topics/:topic_id/replies.json" [topic_id] (topic-replies-index topic_id))
-           (POST "/topics/:topic_id/replies.json" [topic_id body] (topic-replies-create topic_id body))
+           (POST "/topics/:topic_id/replies.json" [current_user_id topic_id body] (topic-replies-create current_user_id topic_id body))
            (PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
            (DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
 

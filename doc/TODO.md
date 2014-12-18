@@ -6,11 +6,6 @@ POST /forget_password?email=xx@yy
 
 
 
-#搜用户
-GET /users?q=美食&page=2
-
-#标签下的用户
-GET /users?lable=美食
 
 #查看用户信息
 GET /users/1.json
@@ -26,7 +21,7 @@ GET /topics/1
   subject: "xxx",
   label_name: "yyy",
   body: "yyy",
-  creator_id: 33,
+  user_id: 33,
   created_at: "2014-11-33 ...",
   replies: [
     {

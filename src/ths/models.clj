@@ -40,8 +40,15 @@
   )
 
 ;; users
-(defn users-all []
-  (select users))
+(defn users-all [q label_name page]
+  (cond-> (select* users)
+          true (with user_labels)
+          (not (clojure.string/blank? q)) (where {"user_labels.label_name" [like (str "%" q "%")]})
+          (not (clojure.string/blank? label_name)) (where {"user_labels.label_name" label_name})
+          true (limit 20)
+          true (offset (* (- page 1) 20))
+          true (select)
+          ))
 
 (defn users-create [username password email phone]
   (insert users
@@ -106,11 +113,12 @@
           (order :created_at :DESC)
           (limit 20)))
 
-(defn topics-create [subject body label_name]
+(defn topics-create [current_user_id subject body label_name]
   (insert topics
           (values {:subject    subject
                    :body       body
-                   :label_name label_name})))
+                   :label_name label_name
+                   :user_id    current_user_id})))
 
 (defn topics-update [id subject body label_name]
   (update topics
@@ -134,10 +142,11 @@
           (order :created_at :DESC)
           (limit 20)))
 
-(defn topic-replies-create [topic_id body]
+(defn topic-replies-create [current_user_id topic_id body]
   (insert replies
           (values {:topic_id topic_id
                    :body     body
+                   :user_id  current_user_id
                    })))
 
 (defn topic-replies-update [topic_id reply_id body]

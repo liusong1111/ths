@@ -21,6 +21,16 @@
     HTTP BODY:
     [{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}]
 
+## 标签下的用户
+    GET /users.json?lable_name=美食
+    curl http://127.0.0.1:3000/users.json?label_name=美食
+
+## 搜用户
+    GET /users?q=美食&page=2
+    curl http://127.0.0.1:3000/users.json?q=美&page=1
+
+
+
 ## 注册用户(TODO: last-insert-row-id:2; 环信注册)
     POST /users.json
     curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/users.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\",\"email\":\"liusong1111@gmail.com\",\"phone\":\"15522602848\"}"
@@ -38,7 +48,7 @@
     {"id":1,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602849","created_at":"2014-11-12T14:36:51.000Z","updated_at":"2014-11-12T14:37:45.166Z"}
 
 ## 设置某人的标签
-    curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/users/2/update_labels.json -d "{\"labels\": [\"美食\",\"java\"]}"
+    curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/users/1/update_labels.json -d "{\"labels\": [\"美食\",\"java\"]}"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
@@ -89,7 +99,7 @@
     # 返回格式例如：
     HTTP STATUS: 200
     HTTP BODY:
-    [{"id":1,"subject":"清蒸鲈鱼怎么做？","body":"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。","label_name":"美食","creator_id":1,"url":"http://127.0.0.1:3000/topics/1.json"}]
+    [{"id":1,"subject":"清蒸鲈鱼怎么做？","body":"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。","label_name":"美食","user_id":1,"url":"http://127.0.0.1:3000/topics/1.json"}]
 
 ## 发表话题
     POST /topics.json
@@ -97,7 +107,7 @@
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
-    {"id":1,"subject":"清蒸鲈鱼怎么做？","body":"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。","label_name":"美食","creator_id":1,"created_at":"2014-11-12T15:00:11.554Z","updated_at":"2014-11-12T15:00:11.554Z"}
+    {"id":1,"subject":"清蒸鲈鱼怎么做？","body":"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。","label_name":"美食","user_id":1,"created_at":"2014-11-12T15:00:11.554Z","updated_at":"2014-11-12T15:00:11.554Z"}
 
 ## 修改话题
     PATCH/PUT /topics/1.json
@@ -105,7 +115,7 @@
     #返回格式例如：
     HTTP STATUS: 200
     HTTP BODY:
-    {"id":1,"subject":"清蒸鲈鱼怎么做？","body":"蒸一下就好了","label_name":"美食","creator_id":1,"created_at":"2014-11-12T15:00:11.000Z","updated_at":"2014-11-12T15:04:03.225Z"}
+    {"id":1,"subject":"清蒸鲈鱼怎么做？","body":"蒸一下就好了","label_name":"美食","user_id":1,"created_at":"2014-11-12T15:00:11.000Z","updated_at":"2014-11-12T15:04:03.225Z"}
 
 ## 删除话题
     DELETE /topics/1.json

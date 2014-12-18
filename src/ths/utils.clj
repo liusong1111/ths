@@ -22,15 +22,15 @@
   (sha1-hmac email huanxin-salt)
   )
 
-(defn generate-login-token [email]
-  (str email ";" (sha1-hmac email login-salt))
+(defn generate-login-token [user_id email]
+  (str user_id ";" email ";" (sha1-hmac email login-salt))
   )
 
 (defn parse-login-token [f]
-  (let [[email token] (clojure.string/split f #";" 2)
-        verify-token (generate-login-token email)]
+  (let [[user_id email token] (clojure.string/split f #";" 3)
+        verify-token (generate-login-token user_id email)]
     (when (= verify-token f)
-      email)
+      [user_id email])
     )
   )
 
@@ -38,7 +38,10 @@
   (fn [request]
     ;(println request)
     (handler (if-let [token (or (get-in request [:params :token]) (get-in request [:headers "x-token"]))]
-               (assoc-in request [:params :current_email] (parse-login-token token))
+               (let [[current_user_id current_user_email] (parse-login-token token)
+                     request (assoc-in request [:params :current_user_id] current_user_id)
+                     request (assoc-in request [:params :current_user_email] current_user_email)]
+                 request)
                request
                ))
 
@@ -53,11 +56,9 @@
 ;(defn -main []
 ;  (println (String. (base64/decode (.getBytes "aGVsbG8=") )) ))
 
-; "bGl1c29uZzExMTFAZ21haWwuY29tO2Q0YjYyOWE4MDkzNDU2N2UwNDUzMGViYmQyZmJlNGUxMjhlODVlZDA="
-; "bGl1c29uZzExMTFAZ21haWwuY29tO2Q0YjYyOWE4MDkzNDU2N2UwNDUzMGViYmQyZmJlNGUxMjhlODVlZDA%3D"
-; "liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"
-;(defn -main []
-;  (println (generate-login-token "liusong1111@gmail.com")))
+; "2;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"
+(defn -main []
+  (println (generate-login-token 2 "liusong1111@gmail.com")))
 
 (defn -main []
-  (println (parse-login-token "liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0")))
+  (println (parse-login-token "2;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0")))
