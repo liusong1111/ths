@@ -196,15 +196,16 @@
   (if-let [invitation (first (select invitations
                                      (where {:id invitation_id})
                                      (limit 1)))]
-    (update invitation
-            (set-fields {:status "agreed"})
-            (where {:id invitation_id}))
-    (insert friends
-            (values {:user_id   (:inviter_id invitation)
-                     :friend_id (:invitee_id invitation)}))
-    (insert friends
-            (values {:user_id   (:invitee_id invitation)
-                     :friend_id (:inviter_id invitation)}))
+    (do (update invitations
+                (set-fields {:status "agreed"})
+                (where {:id invitation_id}))
+        (insert friends
+                (values {:user_id   (:inviter_id invitation)
+                         :friend_id (:invitee_id invitation)}))
+        (insert friends
+                (values {:user_id   (:invitee_id invitation)
+                         :friend_id (:inviter_id invitation)})))
+
     )
   )
 
@@ -212,16 +213,17 @@
   (if-let [invitation (first (select invitations
                                      (where {:id invitation_id})
                                      (limit 1)))]
-    (update invitation
-            (set-fields {:status "refused"})
-            (where {:id invitation_id}))
-    (delete friends
-            (where (or {:user_id   (:inviter_id invitation)
-                        :friend_id (:invitee_id invitation)}
-                       {:user_id   (:invitee_id invitation)
-                        :friend_id (:inviter_id invitation)}
-                       ))
-            )
+    (do (update invitations
+                (set-fields {:status "refused"})
+                (where {:id invitation_id}))
+        (delete friends
+                (where (or {:user_id   (:inviter_id invitation)
+                            :friend_id (:invitee_id invitation)}
+                           {:user_id   (:invitee_id invitation)
+                            :friend_id (:inviter_id invitation)}
+                           ))
+                ))
+
     )
   )
 
@@ -233,9 +235,15 @@
                       :friend_id current_user_id}))))
 
 (defn friends-index [user_id]
-  (select friends
-          (where {:user_id user_id})
-          (order :created_at :DESC)))
+  (let [my-friends (select friends
+                           (where {:user_id user_id})
+                           (order :created_at :DESC))
+        friend-ids (map :friend_id my-friends)
+        ]
+    (select users
+            (with user_labels)
+            (where {:id [in friend-ids]}))
+    ))
 
 
 

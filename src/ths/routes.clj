@@ -159,13 +159,12 @@
            (DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
 
            ;; friends
-           (GET "/users/:id/invitations" [id] (invitations-index id))
+           (GET "/users/:id/invitations.json" [id] (invitations-index id))
            (POST "/invitations.json" [current_user_id invitee_id reason] (invitations-create current_user_id invitee_id reason))
            (POST "/invitations/:id/agree.json" [current_user_id id] (invitations-agree current_user_id id))
            (POST "/invitations/:id/refuse.json" [current_user_id id] (invitations-refuse current_user_id id))
-           (DELETE "/friends/:friend_id" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
-           (GET "/users/:id/friends" [id] (friends-index id))
-
+           (DELETE "/friends/:friend_id.json" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
+           (GET "/users/:id/friends.json" [id] (friends-index id))
 
            (route/not-found "Not Found"))
 

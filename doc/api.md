@@ -201,7 +201,7 @@
 
 ## 删好友
     # 注： 2是好友ID
-    curl -X DELETE http://127.0.0.1:3000/friends/2.json
+    curl -X DELETE  -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"  http://127.0.0.1:3000/friends/2.json
 
 ## 得到某人的好友列表
     curl http://127.0.0.1:3000/users/1/friends.json
