@@ -29,19 +29,11 @@
            (belongs-to labels {:fk :label_name}))
 
 ;; ------------------
-;; utils
-(defmacro present-where [query v clause]
-  `(if (str/blank? ~v)
-    ~query
-    (-> ~query (where ~clause))
-    )
-  )
-;; ------------------
 
 ;; auth
-(defn auth [username password]
+(defn auth [email password]
   (first (select users
-                 (where {:username username
+                 (where {:email email
                          :password password})
                  (with user_labels (with labels))
                  (limit 1)))
@@ -85,12 +77,19 @@
           (where {:user_id id})))
 
 ;; labels
-(defn labels-index [q]
-  (-> (present-where (select* labels)
-                     q {:label_name [like (str "%" q "%")]}
-                     )
-      (select))
+;(defn labels-index [q]
+;  (-> (present-where (select* labels)
+;                     q {:label_name [like (str "%" q "%")]}
+;                     )
+;      (select))
+;
+;  )
 
+(defn labels-index [q]
+  (cond-> (select* labels)
+          (not (str/blank? q)) (where {:label_name [like (str "%" q "%")]})
+          true (select)
+          )
   )
 
 (defn labels-create [label_name]

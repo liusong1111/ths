@@ -29,8 +29,8 @@
 (defn destroy []
   (timbre/info "TongHang Server is shutting down"))
 
-(defn login [username password]
-  (let [user (m/auth username password)]
+(defn login [email password]
+  (let [user (m/auth email password)]
     (if user
       (json-response {
                       :code "ok"
@@ -103,7 +103,7 @@
            (DELETE "/demo.json" [name] (json-response {:code "OK" :message (str "deleted:" name)}))
 
            ;; login
-           (POST "/login.json" [username password] (login username password))
+           (POST "/login.json" [email password] (login email password))
 
            ;; users
            (GET "/users.json" [] (users-index))
