@@ -1,8 +1,8 @@
 # TODO
   * response json format
   * auth token
-  
-# 登录(TODO: user.labels)
+
+# 登录(TODO: user.labels;; 用邮箱登录)
     curl -i -X POST  -H "Content-Type:application/json" http://127.0.0.1:3000/login.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\"}"
     # 返回格式例如
     HTTP STATUS: 200
@@ -56,6 +56,9 @@
     HTTP STATUS: 200
     HTTP BODY:
     [{"id":1,"label_name":"美食","url":"http://127.0.0.1:3000/labels/1.json"}]
+
+## 搜标签
+    GET /labels.json?q=美食
 
 ## 新建标签
     POST /labels.json

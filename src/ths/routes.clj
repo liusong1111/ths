@@ -59,8 +59,8 @@
   (json-response (m/users-destroy id)))
 
 ;; labels
-(defn labels-index []
-  (json-response (m/labels-index)))
+(defn labels-index [q]
+  (json-response (m/labels-index q)))
 
 (defn labels-create [label_name]
   (json-response (m/labels-create label_name)))
@@ -113,7 +113,7 @@
            (DELETE "/users/:id.json" [id] (users-destroy id))
 
            ;; labels
-           (GET "/labels.json" [] (labels-index))
+           (GET "/labels.json" [q] (labels-index q))
            (POST "/labels.json" [label_name] (labels-create label_name))
            (DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
 

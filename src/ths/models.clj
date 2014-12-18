@@ -1,4 +1,5 @@
 (ns ths.models
+  (:require [clojure.string :as str])
   (:use korma.config
         korma.core
         korma.db
@@ -28,6 +29,13 @@
            (belongs-to labels {:fk :label_name}))
 
 ;; ------------------
+;; utils
+(defmacro present-where [query v clause]
+  `(if (str/blank? ~v)
+    ~query
+    (-> ~query (where ~clause))
+    )
+  )
 ;; ------------------
 
 ;; auth
@@ -77,8 +85,13 @@
           (where {:user_id id})))
 
 ;; labels
-(defn labels-index []
-  (select labels))
+(defn labels-index [q]
+  (-> (present-where (select* labels)
+                     q {:label_name [like (str "%" q "%")]}
+                     )
+      (select))
+
+  )
 
 (defn labels-create [label_name]
   (insert labels

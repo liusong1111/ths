@@ -1,11 +1,10 @@
-忘记密码，发送重置密码到邮箱（server api:
+# 忘记密码，发送重置密码到邮箱（server api:
 POST /forget_password?email=xx@yy
 
 #按标签搜索用户
 
 
-#搜标签
-GET /labels?q=美食
+
 
 #搜用户
 GET /users?q=美食&page=2
