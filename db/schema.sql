@@ -44,11 +44,14 @@ CREATE TABLE invitations (
   id         INTEGER PRIMARY KEY,
   inviter_id INTEGER,
   invitee_id INTEGER,
-  remark     char(255)
+  reason     char(255),
+  status     char(255) DEFAULT 'pending', --enum('pending', 'refused', 'agreed')
+  created_at timestamp DEFAULT current_timestamp
 );
 
 CREATE TABLE friends (
-  id        INTEGER PRIMARY KEY,
-  user_id   INTEGER,
-  friend_id INTEGER
+  id         INTEGER PRIMARY KEY,
+  user_id    INTEGER,
+  friend_id  INTEGER,
+  created_at timestamp DEFAULT current_timestamp
 );

@@ -183,3 +183,26 @@
     返回格式例如：
     HTTP STATUS: 204
 
+# 好友
+
+## 得到某人的好友申请列表
+    curl http://127.0.0.1:3000/users/1/invitations.json
+
+## 请求加好友
+    curl -X POST http://127.0.0.1:3000/invitations.json -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0" -d "invitee_id=2&reason=hello"
+
+## 同意加好友
+    # 其中1是invitation的id
+    curl -X POST http://127.0.0.1:3000/invitations/1/agree.json
+
+## 拒绝加好友
+    # 其中1是invitation的id
+    curl -X POST http://127.0.0.1:3000/invitations/1/refuse.json
+
+## 删好友
+    # 注： 2是好友ID
+    curl -X DELETE http://127.0.0.1:3000/friends/2.json
+
+## 得到某人的好友列表
+    curl http://127.0.0.1:3000/users/1/friends.json
+

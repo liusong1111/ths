@@ -24,9 +24,12 @@
            (belongs-to topics {:fk :topic_id}))
 
 (defentity user_labels
-           (database db-spec)
            (belongs-to users {:fk :user_id})
            (belongs-to labels {:fk :label_name}))
+
+(defentity invitations)
+
+(defentity friends)
 
 ;; ------------------
 
@@ -175,3 +178,64 @@
 (defn topic-replies-destroy [topic_id reply_id]
   (delete replies
           (where {:id reply_id})))
+
+;; friends
+(defn invitations-index [inviter_id]
+  (select invitations
+          (where {:inviter_id inviter_id})
+          (order :created_at :DESC)))
+
+(defn invitations-create [current_user_id invitee_id reason]
+  (insert invitations
+          (values {:inviter_id current_user_id
+                   :invitee_id invitee_id
+                   :reason     reason}))
+  )
+
+(defn invitations-agree [current_user_id invitation_id]
+  (if-let [invitation (first (select invitations
+                                     (where {:id invitation_id})
+                                     (limit 1)))]
+    (update invitation
+            (set-fields {:status "agreed"})
+            (where {:id invitation_id}))
+    (insert friends
+            (values {:user_id   (:inviter_id invitation)
+                     :friend_id (:invitee_id invitation)}))
+    (insert friends
+            (values {:user_id   (:invitee_id invitation)
+                     :friend_id (:inviter_id invitation)}))
+    )
+  )
+
+(defn invitations-refuse [current_user_id invitation_id]
+  (if-let [invitation (first (select invitations
+                                     (where {:id invitation_id})
+                                     (limit 1)))]
+    (update invitation
+            (set-fields {:status "refused"})
+            (where {:id invitation_id}))
+    (delete friends
+            (where (or {:user_id   (:inviter_id invitation)
+                        :friend_id (:invitee_id invitation)}
+                       {:user_id   (:invitee_id invitation)
+                        :friend_id (:inviter_id invitation)}
+                       ))
+            )
+    )
+  )
+
+(defn friends-destroy [current_user_id friend_id]
+  (delete friends
+          (where (or {:user_id   current_user_id
+                      :friend_id friend_id}
+                     {:user_id   friend_id
+                      :friend_id current_user_id}))))
+
+(defn friends-index [user_id]
+  (select friends
+          (where {:user_id user_id})
+          (order :created_at :DESC)))
+
+
+

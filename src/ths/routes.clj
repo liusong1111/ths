@@ -102,6 +102,25 @@
 (defn topic-replies-destroy [topic_id reply_id]
   (json-response (m/topic-replies-destroy topic_id reply_id)))
 
+;; friends
+(defn invitations-index [user_id]
+  (json-response (m/invitations-index user_id)))
+
+(defn invitations-create [current_user_id invitee_id reason]
+  (json-response (m/invitations-create current_user_id invitee_id reason)))
+
+(defn invitations-agree [current_user_id invitation_id]
+  (json-response (m/invitations-agree current_user_id invitation_id)))
+
+(defn invitations-refuse [current_user_id invitation_id]
+  (json-response (m/invitations-refuse current_user_id invitation_id)))
+
+(defn friends-destroy [current_user_id friend_id]
+  (json-response (m/friends-destroy current_user_id friend_id)))
+
+(defn friends-index [user_id]
+  (json-response (m/friends-index user_id)))
+
 (defroutes app-routes
            (GET "/" [] "Hello World")
 
@@ -138,6 +157,15 @@
            (POST "/topics/:topic_id/replies.json" [current_user_id topic_id body] (topic-replies-create current_user_id topic_id body))
            (PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
            (DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
+
+           ;; friends
+           (GET "/users/:id/invitations" [id] (invitations-index id))
+           (POST "/invitations.json" [current_user_id invitee_id reason] (invitations-create current_user_id invitee_id reason))
+           (POST "/invitations/:id/agree.json" [current_user_id id] (invitations-agree current_user_id id))
+           (POST "/invitations/:id/refuse.json" [current_user_id id] (invitations-refuse current_user_id id))
+           (DELETE "/friends/:friend_id" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
+           (GET "/users/:id/friends" [id] (friends-index id))
+
 
            (route/not-found "Not Found"))
 
