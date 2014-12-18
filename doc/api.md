@@ -1,6 +1,5 @@
 # TODO
   * response json format
-  * auth token
 
 # 登录(TODO: user.labels)
     curl -i -X POST http://127.0.0.1:3000/login.json -d "email=liusong1111@gmail.com&password=aaaaaa"
