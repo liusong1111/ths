@@ -33,8 +33,10 @@
   (let [user (m/auth email password)]
     (if user
       (json-response {
-                      :code "ok"
-                      :user user
+                      :code         "ok"
+                      :token        (generate-login-token email)
+                      :huanxin_user (generate-huanxin-username email)
+                      :user         user
                       })
       {:status  401
        :headers {}
@@ -97,7 +99,7 @@
 (defroutes app-routes
            (GET "/" [] "Hello World")
 
-           (GET "/demo.json" [] (json-response {:code "OK" :message "welcome"}))
+           (GET "/demo.json" [current_email] (json-response {:code "OK" :message (str "welcome:" current_email)}))
            (POST "/demo.json" [name] (json-response {:code "OK" :message (str "created:" name)}))
            (PUT "/demo.json" [name] (json-response {:code "OK" :message (str "updated:" name)}))
            (DELETE "/demo.json" [name] (json-response {:code "OK" :message (str "deleted:" name)}))
@@ -133,7 +135,8 @@
 
 (def app
   (->
-    (wrap-defaults app-routes api-defaults)
+    (wrap-parse-login-token app-routes)
+    (wrap-defaults api-defaults)
     ;(wrap-json-params {:keywords? true :bigdecimals? true})
     (wrap-restful-params)
     )

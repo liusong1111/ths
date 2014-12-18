@@ -33,7 +33,7 @@
 ;; auth
 (defn auth [email password]
   (first (select users
-                 (where {:email email
+                 (where {:email    email
                          :password password})
                  (with user_labels (with labels))
                  (limit 1)))

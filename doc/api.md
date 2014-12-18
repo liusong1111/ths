@@ -7,7 +7,11 @@
     # 返回格式例如
     HTTP STATUS: 200
     HTTP BODY:
-    {"code":"ok","user":{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}}
+    {"code":"ok","token":"liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0","huanxin_user":"4c36aba13d16f79ed79a29eec4bfbde0163e2d4f","user":{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}}
+    #注：回复的body里，有token字段和huanxin_user字段
+    #后续所有请求，请求的headers里，必须带一个头"x-token:收到的token"
+    #huanxin_user是该用户在环信上的用户名
+
 # 用户管理
 
 ## 得到用户列表(TODO: labels)
@@ -17,7 +21,7 @@
     HTTP BODY:
     [{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}]
 
-## 注册用户(TODO: last-insert-row-id:2)
+## 注册用户(TODO: last-insert-row-id:2; 环信注册)
     POST /users.json
     curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/users.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\",\"email\":\"liusong1111@gmail.com\",\"phone\":\"15522602848\"}"
     #返回格式例如：

@@ -15,6 +15,8 @@
                            [com.taoensso/timbre "3.3.1"]
                            [com.postspectacular/rotor "0.1.0"]
                            [commons-io/commons-io "2.4"]
+                           [pandect "0.4.1"]
+                           [org.clojure/data.codec "0.1.0"]
                            ]
             :plugins [[lein-ring "0.8.13"]]
             :ring {:handler ths.routes/app
