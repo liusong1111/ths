@@ -3,7 +3,7 @@
 
 (defn json-response [data & [status]]
   {:status  (or status 200)
-   :headers {"Content-Type" "application/json"}
+   :headers {"Content-Type" "application/json;charset=UTF-8"}
    :body    (json/generate-string data)})
 
 ; 数据库路径

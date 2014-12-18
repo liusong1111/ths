@@ -1,3 +1,7 @@
+# TODO
+  * response json format
+  * auth token
+  
 # 登录(TODO: user.labels)
     curl -i -X POST  -H "Content-Type:application/json" http://127.0.0.1:3000/login.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\"}"
     # 返回格式例如
@@ -62,8 +66,8 @@
     {"id":1,"label_name":"美食","created_at":"2014-11-12T14:51:13.597Z","updated_at":"2014-11-12T14:51:13.597Z"}
 
 ## 删除标签(重要：只有管理员才有权限)
-    DELETE /labels/1.json
-    curl -X DELETE -H "Content-Type:application/json" http://127.0.0.1:3000/labels/1.json
+    DELETE /labels/美食.json
+    curl -X DELETE -H "Content-Type:application/json" http://127.0.0.1:3000/labels/美食.json
     返回格式例如：
     HTTP STATUS: 204
 

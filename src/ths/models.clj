@@ -28,6 +28,9 @@
            (belongs-to labels {:fk :label_name}))
 
 ;; ------------------
+;; ------------------
+
+;; auth
 (defn auth [username password]
   (first (select users
                  (where {:username username
@@ -35,6 +38,11 @@
                  (with user_labels (with labels))
                  (limit 1)))
   )
+
+;; users
+(defn users-all []
+  (select users))
+
 (defn users-create [username password email phone]
   (insert users
           (values {:username username
@@ -69,10 +77,62 @@
           (where {:user_id id})))
 
 ;; labels
-
 (defn labels-index []
   (select labels))
 
+(defn labels-create [label_name]
+  (insert labels
+          (values {:label_name label_name})))
 
-(defn users-all []
-  (select users))
+(defn labels-destroy [label_name]
+  (delete labels
+          (where {:label_name label_name})))
+
+;; topics
+(defn topics-index []
+  (select topics
+          (order :created_at :DESC)
+          (limit 20)))
+
+(defn topics-create [subject body label_name]
+  (insert topics
+          (values {:subject    subject
+                   :body       body
+                   :label_name label_name})))
+
+(defn topics-update [id subject body label_name]
+  (update topics
+          (set-fields {
+                       :subject    subject
+                       :body       body
+                       :label_name label_name
+                       })
+          (where {:id id})))
+
+(defn topics-destroy [id]
+  (delete topics
+          (where {:id id}))
+  (delete replies
+          (where {:topic_id id})))
+
+;; replies
+(defn topic-replies-index [topic_id]
+  (select replies
+          (where {:topic_id topic_id})
+          (order :created_at :DESC)
+          (limit 20)))
+
+(defn topic-replies-create [topic_id body]
+  (insert replies
+          (values {:topic_id topic_id
+                   :body     body
+                   })))
+
+(defn topic-replies-update [topic_id reply_id body]
+  (update replies
+          (set-fields {:body body})
+          (where {:id reply_id})))
+
+(defn topic-replies-destroy [topic_id reply_id]
+  (delete replies
+          (where {:id reply_id})))
