@@ -48,6 +48,9 @@
 (defn users-index [q label_name page]
   (json-response (m/users-all q label_name page)))
 
+(defn users-show [id]
+  (json-response (m/users-show id)))
+
 (defn users-create [username password email phone]
   (json-response (m/users-create username password email phone)))
 
@@ -71,8 +74,11 @@
   (json-response (m/labels-destroy label_name)))
 
 ;; topics
-(defn topics-index [current_user_id]
-  (json-response (m/topics-index)))
+(defn topics-index [current_user_id user_id page]
+  (json-response (m/topics-index current_user_id user_id page)))
+
+(defn topics-show [id]
+  (json-response (m/topics-show id)))
 
 (defn topics-create [current_user_id subject body label_name]
   (json-response (m/topics-create current_user_id subject body label_name)))
@@ -109,6 +115,7 @@
 
            ;; users
            (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
+           (GET "/users/:id.json" [id] (users-show id))
            (POST "/users.json" [username password email phone] (users-create username password email phone))
            (PUT "/users/:id.json" [id username password email phone] (users-update id username password email phone))
            (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
@@ -120,7 +127,8 @@
            (DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
 
            ;; topics
-           (GET "/topics.json" [current_user_id] (topics-index current_user_id))
+           (GET "/topics.json" [current_user_id user_id page] (topics-index current_user_id user_id (Integer. (or page "1"))))
+           (GET "/topics/:id.json" [id] (topics-show id))
            (POST "/topics.json" [current_user_id subject body label_name] (topics-create current_user_id subject body label_name))
            (PUT "/topics/:id.json" [id subject body label_name] (topics-update id subject body label_name))
            (DELETE "/topics/:id.json" [id] (topics-destroy id))

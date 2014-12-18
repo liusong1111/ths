@@ -21,7 +21,7 @@ CREATE TABLE topics (
   subject    char(255),
   body       TEXT,
   label_name char(255),
-  user_id INTEGER,
+  user_id    INTEGER,
   created_at timestamp DEFAULT current_timestamp
 );
 
@@ -38,4 +38,17 @@ CREATE TABLE user_labels (
   user_id    INTEGER,
   label_name char(255),
   created_at timestamp DEFAULT current_timestamp
+);
+
+CREATE TABLE invitations (
+  id         INTEGER PRIMARY KEY,
+  inviter_id INTEGER,
+  invitee_id INTEGER,
+  remark     char(255)
+);
+
+CREATE TABLE friends (
+  id        INTEGER PRIMARY KEY,
+  user_id   INTEGER,
+  friend_id INTEGER
 );

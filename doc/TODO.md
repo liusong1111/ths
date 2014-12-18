@@ -6,36 +6,6 @@ POST /forget_password?email=xx@yy
 
 
 
-
-#查看用户信息
-GET /users/1.json
-(返回基本信息+tags)
-
-#查看某用户的话题
-GET /topics?user_id=1&page=2
-
-#查看某话题的详细聊天信息（包括回复）
-GET /topics/1
-返回
-{
-  subject: "xxx",
-  label_name: "yyy",
-  body: "yyy",
-  user_id: 33,
-  created_at: "2014-11-33 ...",
-  replies: [
-    {
-        body: "kkk",
-        user_id: 33,
-        created_at: "2014-11-13",
-        updated_at: "...",
-        user: {
-          image: "aa.jpg"
-        }
-    }
-  ]
-}
-
 # 请求加好友
 POST /invitations/1?user_id=2&reason=xxx
 

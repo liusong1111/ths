@@ -50,6 +50,12 @@
           true (select)
           ))
 
+(defn users-show [id]
+  (first (select users
+                 (with user_labels)
+                 (where {:id id})
+                 (limit 1))))
+
 (defn users-create [username password email phone]
   (insert users
           (values {:username username
@@ -108,10 +114,22 @@
           (where {:label_name label_name})))
 
 ;; topics
-(defn topics-index []
-  (select topics
-          (order :created_at :DESC)
-          (limit 20)))
+(defn topics-index [current_user_id user_id page]
+  (cond-> (select* topics)
+          (not (clojure.string/blank? user_id)) (where {:user_id user_id})
+          true (order :created_at :DESC)
+          true (limit 20)
+          true (offset (* (- page 1) 20))
+          true (select)
+          )
+  )
+
+(defn topics-show [id]
+  (first (select topics
+                 (with replies)
+                 (where {:id id})
+                 (limit 1)))
+  )
 
 (defn topics-create [current_user_id subject body label_name]
   (insert topics

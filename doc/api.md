@@ -12,7 +12,7 @@
     #后续所有请求，请求的headers里，必须带一个头"x-token:收到的token"
     #huanxin_user是该用户在环信上的用户名
 
-# 用户管理
+# 用户管理(TODO: json回来的，不能包含password)
 
 ## 得到用户列表(TODO: labels)
     curl http://127.0.0.1:3000/users.json
@@ -29,7 +29,10 @@
     GET /users?q=美食&page=2
     curl http://127.0.0.1:3000/users.json?q=美&page=1
 
-
+## 查看用户信息
+    GET /users/1.json
+    curl http://127.0.0.1:3000/users/1.json
+    (返回基本信息+tags)
 
 ## 注册用户(TODO: last-insert-row-id:2; 环信注册)
     POST /users.json
@@ -100,6 +103,35 @@
     HTTP STATUS: 200
     HTTP BODY:
     [{"id":1,"subject":"清蒸鲈鱼怎么做？","body":"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。","label_name":"美食","user_id":1,"url":"http://127.0.0.1:3000/topics/1.json"}]
+
+
+## 查看某用户的话题列表
+    GET /topics.json?user_id=1&page=1
+    curl http://127.0.0.1:3000/topics.json?user_id=1&page=1
+
+## 查看某话题的详细聊天信息（包括回复）(TODO: replies以降序排列）
+    GET /topics/1.json
+    curl http://127.0.0.1:3000/topics/1.json
+    返回
+    {
+      subject: "xxx",
+      label_name: "yyy",
+      body: "yyy",
+      user_id: 33,
+      created_at: "2014-11-33 ...",
+      replies: [
+        {
+            body: "kkk",
+            user_id: 33,
+            created_at: "2014-11-13",
+            updated_at: "...",
+            user: {
+              image: "aa.jpg"
+            }
+        }
+      ]
+    }
+
 
 ## 发表话题
     POST /topics.json
