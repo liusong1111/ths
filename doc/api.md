@@ -25,28 +25,27 @@
     curl http://127.0.0.1:3000/users.json?label_name=美食
 
 ## 搜用户
-    GET /users?q=美食&page=2
     curl http://127.0.0.1:3000/users.json?q=美&page=1
 
 ## 查看用户信息
-    GET /users/1.json
     curl http://127.0.0.1:3000/users/1.json
-    (返回基本信息+tags)
+    HTTP STATUS: 200
+    HTTP BODY:
+    {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu","id":1,"image":"0015.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
 
-## 注册用户(TODO: last-insert-row-id:2; 环信注册)
+## 注册用户(TODO: 环信注册)
     curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
-    {"id":1,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:36:51.722Z","updated_at":"2014-11-12T14:36:51.722Z"}
+    {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu1","id":1,"image":"2.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
 
 ## 修改用户信息
-    PATCH/PUT /users/1.json
     curl -X PUT http://127.0.0.1:3000/users/1.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
     #返回格式例如：
     HTTP STATUS: 200
     HTTP BODY:
-    {"id":1,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602849","created_at":"2014-11-12T14:36:51.000Z","updated_at":"2014-11-12T14:37:45.166Z"}
+    {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu","id":1,"image":"0015.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
 
 ## 设置某人的标签
     curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/users/1/update_labels.json -d "{\"labels\": [\"美食\",\"java\"]}"

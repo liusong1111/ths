@@ -12,7 +12,12 @@
 
 (defentity users
            (has-many user_labels {:fk :user_id})
-           (many-to-many labels :user_labels))
+           (transform (fn [v]
+                        (-> v
+                            (assoc :labels (map :label_name (:user_labels v)))
+                            (dissoc :user_labels :password))
+                        ))
+           )
 
 (defentity labels
            (pk :label_name))
@@ -30,6 +35,8 @@
 (defentity invitations)
 
 (defentity friends)
+
+;; ------------------
 
 ;; ------------------
 
