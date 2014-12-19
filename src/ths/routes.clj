@@ -142,8 +142,9 @@
 
            ;; labels
            (GET "/labels.json" [q] (labels-index q))
-           (POST "/labels.json" [label_name] (labels-create label_name))
-           (DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
+           ; 不要了
+           ;(POST "/labels.json" [label_name] (labels-create label_name))
+           ;(DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
 
            ;; topics
            (GET "/topics.json" [current_user_id user_id page] (topics-index current_user_id user_id (Integer. (or page "1"))))

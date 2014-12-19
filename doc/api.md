@@ -76,22 +76,6 @@
 ## 搜标签
     GET /labels.json?q=美食
 
-## 新建标签
-    POST /labels.json
-    curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/labels.json -d "{\"label_name\":\"美食\"}"
-    #返回格式例如：
-    HTTP STATUS: 201
-    HTTP BODY:
-    {"id":1,"label_name":"美食","created_at":"2014-11-12T14:51:13.597Z","updated_at":"2014-11-12T14:51:13.597Z"}
-
-## 删除标签(重要：只有管理员才有权限)
-    DELETE /labels/美食.json
-    curl -X DELETE -H "Content-Type:application/json" http://127.0.0.1:3000/labels/美食.json
-    返回格式例如：
-    HTTP STATUS: 204
-
-
-
 
 # 主题管理
 

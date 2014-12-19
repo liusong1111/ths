@@ -74,13 +74,22 @@
                        :phone    phone})
           (where {:id id})))
 
-(defn users-update-labels [id labels]
+(defn users-update-labels [id label_names]
   (delete user_labels
           (where {:user_id id}))
-  (doall (for [label labels]
-           (insert user_labels
-                   (values {:user_id id :label_name label}
-                           ))))
+  (doall (for [label_name label_names]
+           (do
+             (insert user_labels
+                     (values {:user_id id :label_name label_name}
+                             ))
+             (if (not (first (select labels
+                                     (where {:label_name label_name})
+                                     (limit 1))))
+               (insert labels
+                       (values {:label_name label_name}))
+               )
+             ))
+         )
   ;(insert user_labels
   ;        (values (vec (map #(assoc {:user_id id} :label_name %) labels))
   ;                ))
