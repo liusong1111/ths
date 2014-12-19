@@ -1,7 +1,9 @@
 (ns ths.routes
+  (:import (org.apache.commons.io FileUtils)
+           (java.io File))
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
+            [ring.middleware.defaults :refer [wrap-defaults]]
             ;[ring.middleware.json :refer [wrap-json-params wrap-json-response]]
             [ring.middleware.format-params :refer [wrap-restful-params]]
             [com.postspectacular.rotor :as rotor]
@@ -51,11 +53,23 @@
 (defn users-show [id]
   (json-response (m/users-show id)))
 
-(defn users-create [username password email phone]
-  (json-response (m/users-create username password email phone)))
+(defn users-create [username password email phone sex birth image]
+  (let [user (m/users-create username password email phone sex birth (:filename image))
+        user_id (:id user)
+        sign-image-path (str image-path "/" user_id)
+        _ (when (:tempfile image)
+            (FileUtils/forceMkdir (File. sign-image-path))
+            (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
+    json-response user)
+  )
 
-(defn users-update [id username password email phone]
-  (json-response (m/users-update id username password email phone)))
+(defn users-update [id username password email phone sex birth image]
+  (m/users-update id username password email phone sex birth (:filename image))
+  (when (:tempfile image)
+    (FileUtils/forceMkdir (File. (str image-path "/" id)))
+    (io/copy (:tempfile image) (io/file image-path id (:filename image)))
+    )
+  (json-response (m/users-show id)))
 
 (defn users-update-labels [id labels]
   (json-response (m/users-update-labels id labels)))
@@ -135,8 +149,8 @@
            ;; users
            (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
            (GET "/users/:id.json" [id] (users-show id))
-           (POST "/users.json" [username password email phone] (users-create username password email phone))
-           (PUT "/users/:id.json" [id username password email phone] (users-update id username password email phone))
+           (POST "/users.json" [username password email phone sex birth image] (users-create username password email phone sex birth image))
+           (PUT "/users/:id.json" [id username password email phone sex birth image] (users-update id username password email phone sex birth image))
            (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
            (DELETE "/users/:id.json" [id] (users-destroy id))
 
@@ -168,6 +182,15 @@
            (GET "/users/:id/friends.json" [id] (friends-index id))
 
            (route/not-found "Not Found"))
+
+(def api-defaults
+  "A default configuration for a HTTP API."
+  {:params    {:urlencoded true
+               :multipart  true
+               :keywordize true}
+   :responses {:not-modified-responses true
+               :absolute-redirects     true
+               :content-types          true}})
 
 (def app
   (->

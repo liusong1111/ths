@@ -2,7 +2,9 @@
   (:require [cheshire.core :as json]
             [clojure.data.codec.base64 :as base64]
             [ring.util.codec :as codec]
-            [pandect.core :refer :all]))
+            [pandect.core :refer :all])
+  (:import (org.apache.commons.io FileUtils)
+           (java.io File)))
 
 (defn json-response [data & [status]]
   {:status  (or status 200)
@@ -18,9 +20,14 @@
 ; 生成环信帐号用的salt
 (def huanxin-salt "HUANXIN-SECRET")
 
+; 头像存储目录
+(def image-path "./images")
+
+(FileUtils/forceMkdir (File. image-path))
+
+
 (defn generate-huanxin-username [email]
-  (sha1-hmac email huanxin-salt)
-  )
+  (sha1-hmac email huanxin-salt))
 
 (defn generate-login-token [user_id email]
   (str user_id ";" email ";" (sha1-hmac email login-salt))

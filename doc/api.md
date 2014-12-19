@@ -34,8 +34,7 @@
     (返回基本信息+tags)
 
 ## 注册用户(TODO: last-insert-row-id:2; 环信注册)
-    POST /users.json
-    curl -X POST -H "Content-Type:application/json" http://127.0.0.1:3000/users.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\",\"email\":\"liusong1111@gmail.com\",\"phone\":\"15522602848\"}"
+    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
@@ -43,7 +42,7 @@
 
 ## 修改用户信息
     PATCH/PUT /users/1.json
-    curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/users/1.json -d "{\"username\":\"sliu\",\"password\":\"aaaaaa\",\"email\":\"liusong1111@gmail.com\",\"phone\":\"15522602849\"}"
+    curl -X PUT http://127.0.0.1:3000/users/1.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
     #返回格式例如：
     HTTP STATUS: 200
     HTTP BODY:

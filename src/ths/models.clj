@@ -59,19 +59,29 @@
                  (where {:id id})
                  (limit 1))))
 
-(defn users-create [username password email phone]
-  (insert users
-          (values {:username username
-                   :password password
-                   :email    email
-                   :phone    phone})))
+(defn users-create [username password email phone sex birth image]
+  (-> (insert users
+              (values {:username username
+                       :password password
+                       :email    email
+                       :phone    phone
+                       :sex      sex
+                       :birth    birth
+                       :image    image}))
+      ((keyword "last_insert_rowid()"))
+      users-show
+      )
+  )
 
-(defn users-update [id username password email phone]
+(defn users-update [id username password email phone sex birth image]
   (update users
           (set-fields {:username username
                        :password password
                        :email    email
-                       :phone    phone})
+                       :phone    phone
+                       :sex      sex
+                       :birth    birth
+                       :image    image})
           (where {:id id})))
 
 (defn users-update-labels [id label_names]
