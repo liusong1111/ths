@@ -60,7 +60,8 @@
         _ (when (:tempfile image)
             (FileUtils/forceMkdir (File. sign-image-path))
             (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
-    json-response user)
+    (json-response user)
+    )
   )
 
 (defn users-update [id username password email phone sex birth image]
