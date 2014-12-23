@@ -23,6 +23,9 @@
 ; 头像存储目录
 (def image-path "./images")
 
+; huanxin
+(def huanxin-url-root "http://a1.easemob.com/tonghang/tonghang")
+
 (FileUtils/forceMkdir (File. image-path))
 
 
@@ -63,8 +66,8 @@
 ;(defn -main []
 ;  (println (String. (base64/decode (.getBytes "aGVsbG8=") )) ))
 ; "1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"
-(defn -main []
-  (println (generate-login-token 1 "liusong1111@gmail.com")))
+;(defn -main []
+;  (println (generate-login-token 1 "liusong1111@gmail.com")))
 
 ;(defn -main []
 ;  (println (parse-login-token "1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0")))

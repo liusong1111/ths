@@ -34,7 +34,7 @@
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu","id":1,"image":"0015.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
 
 ## 注册用户(TODO: 环信注册)
-    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
+    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu1" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
