@@ -57,8 +57,6 @@
 (def token-info (atom {:fetcher (fetch-token)}))
 
 (defn -main []
-  (println "preparing...")
+  (println "fetching...")
   (println (get-token))
-  ;(println)
-  ;(println (t/after? (t/now) (t/plus (t/now) (t/seconds 3) (t/minutes -10))))
   (println "ok!"))
