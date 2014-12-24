@@ -15,7 +15,8 @@
            (transform (fn [v]
                         (-> v
                             (assoc :labels (map :label_name (:user_labels v)))
-                            (dissoc :user_labels :password))
+                            (dissoc :user_labels :password)
+                            (assoc :image (if (str/blank? (:image v)) nil (str site-root "/signs/" (:id v) "/" (:image v)))))
                         ))
            )
 
@@ -80,15 +81,9 @@
       )
   )
 
-(defn users-update [id username password email phone sex birth image]
+(defn users-update [id attrs]
   (update users
-          (set-fields {:username username
-                       :password password
-                       :email    email
-                       :phone    phone
-                       :sex      sex
-                       :birth    birth
-                       :image    image})
+          (set-fields attrs)
           (where {:id id})))
 
 (defn users-update-labels [id label_names]

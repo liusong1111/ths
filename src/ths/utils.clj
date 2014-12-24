@@ -11,6 +11,9 @@
    :headers {"Content-Type" "application/json;charset=UTF-8"}
    :body    (json/generate-string data)})
 
+(defn remove-blank-values [record]
+  (into {} (filter second record)))
+
 ; 数据库路径
 (def db-path "ths.db")
 
@@ -54,8 +57,9 @@
                  request)
                request
                ))
-
     ))
+
+(def site-root "http://10.0.2.2:3000")
 
 ;(defn -main []
 ;  (println (sha1-hmac "hello" token-salt)) )

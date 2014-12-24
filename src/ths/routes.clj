@@ -64,13 +64,14 @@
     )
   )
 
-(defn users-update [id username password email phone sex birth image]
-  (m/users-update id username password email phone sex birth (:filename image))
+(defn users-update [id attrs image]
+  (m/users-update id attrs)
   (when (:tempfile image)
     (FileUtils/forceMkdir (File. (str image-path "/" id)))
     (io/copy (:tempfile image) (io/file image-path id (:filename image)))
     )
-  (json-response (m/users-show id)))
+  (json-response (m/users-show id))
+  )
 
 (defn users-update-labels [id labels]
   (json-response (m/users-update-labels id labels)))
@@ -151,9 +152,18 @@
            (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
            (GET "/users/:id.json" [id] (users-show id))
            (POST "/users.json" [username password email phone sex birth image] (users-create username password email phone sex birth image))
-           (PUT "/users/:id.json" [id username password email phone sex birth image] (users-update id username password email phone sex birth image))
+           (PUT "/users/:id.json" {params :params} (let [id (:id params)
+                                                         image (:image params)
+                                                         attrs (-> (select-keys params [:username :password :email :phone :sex :birth])
+                                                                   (assoc :image (:filename image))
+                                                                   remove-blank-values
+                                                                   )] (users-update id attrs image)))
            (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
            (DELETE "/users/:id.json" [id] (users-destroy id))
+
+           (GET "/signs/*" [*]
+                (ring.util.response/response (File. (str image-path "/" *)))
+                )
 
            ;; labels
            (GET "/labels.json" [q] (labels-index q))
