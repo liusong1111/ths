@@ -21,11 +21,11 @@
     [{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}]
 
 ## 标签下的用户
-    GET /users.json?lable_name=美食
     curl http://127.0.0.1:3000/users.json?label_name=美食
 
 ## 搜用户
     curl http://127.0.0.1:3000/users.json?q=美&page=1
+    注：按username或label_name模糊搜索
 
 ## 查看用户信息
     curl http://127.0.0.1:3000/users/1.json

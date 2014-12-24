@@ -55,7 +55,7 @@
   (cond-> (select* users)
           true (join user_labels)
           true (with user_labels)
-          (not (clojure.string/blank? q)) (where {(keyword "user_labels.label_name") [like (str "%" q "%")]})
+          (not (clojure.string/blank? q)) (where (or {(keyword "user_labels.label_name") [like (str "%" q "%")]} {:username [like (str "%" q "%")]}))
           (not (clojure.string/blank? label_name)) (where {(keyword "user_labels.label_name") label_name})
           true (limit 20)
           true (offset (* (- page 1) 20))
