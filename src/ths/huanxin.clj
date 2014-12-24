@@ -32,6 +32,7 @@
 
     (let [data (json/parse-string body true)
           {:keys [access_token expires_in]} data]
+      (future (Thread/sleep (- expires_in 1200)) (fetch-token))
       (swap! token-info assoc
              :fetcher nil
              :expire-at (t/plus (t/now) (t/seconds expires_in) (t/minutes -10))
