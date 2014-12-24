@@ -53,9 +53,10 @@
 ;; users
 (defn users-all [q label_name page]
   (cond-> (select* users)
+          true (join user_labels)
           true (with user_labels)
-          (not (clojure.string/blank? q)) (where {"user_labels.label_name" [like (str "%" q "%")]})
-          (not (clojure.string/blank? label_name)) (where {"user_labels.label_name" label_name})
+          (not (clojure.string/blank? q)) (where {(keyword "user_labels.label_name") [like (str "%" q "%")]})
+          (not (clojure.string/blank? label_name)) (where {(keyword "user_labels.label_name") label_name})
           true (limit 20)
           true (offset (* (- page 1) 20))
           true (select)
