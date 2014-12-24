@@ -57,7 +57,50 @@
 
 (def token-info (atom {:fetcher (fetch-token)}))
 
+;;------
+; http client接口封装
+(defn http-request [method uri params]
+  (http/request
+    {
+     :url     (str huanxin-url-root uri)
+     :method  method
+     :headers {
+               "Content-Type"  "application/json"
+               "Authorization" (str "Bearer " (get-token))
+               "Accept"        "application/json"
+               }
+     :body    (json/generate-string params)
+     }
+    (fn [{:keys [status headers body error opts] :as response}]
+      (if error
+        (logger/error error)
+        (let [data (json/parse-string body true)]
+          (logger/info data)))
+      )
+    )
+  )
+;;------
+; 注册单个用户
+(defn users-create [username password nickname]
+  (http-request :post "/users"
+                {
+                 :username username
+                 :password password
+                 :nickname nickname
+                 }))
+
+; 修改用户的密码
+(defn users-update-password [username newpassword]
+  (http-request :put (str "/users/" username "/password")
+                {
+                 :newpassword newpassword
+                 })
+  )
+
 (defn -main []
   (println "fetching...")
   (println (get-token))
+  ;(println @(users-create "liusong" "liusong" nil))
+  ;(println @(users-update-password "liusong" "liusong1"))
+  ;(println @(users-update-password "4c36aba13d16f79ed79a29eec4bfbde0163e2d4f" "liusong"))
   (println "ok!"))

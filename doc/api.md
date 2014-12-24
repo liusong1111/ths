@@ -33,12 +33,13 @@
     HTTP BODY:
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu","id":1,"image":"0015.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
 
-## 注册用户(TODO: 环信注册)
+## 注册用户
     curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu1" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu1","id":1,"image":"2.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
+    注: 本步server会在环信上注册帐号，用户名为对email的sha1编码。
 
 ## 修改用户信息
     curl -X PUT http://127.0.0.1:3000/users/1.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
@@ -46,6 +47,8 @@
     HTTP STATUS: 200
     HTTP BODY:
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu","id":1,"image":"0015.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
+    注：本步如果修改了密码，则server会通知环信修改密码。
+    另注：如果改邮箱，因为环信帐号是根据邮箱算出来的，也需要修改，环信尚不提供修改用户名的接口，因此，最好在app端就不让更改邮箱。
 
 ## 设置某人的标签
     curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/users/1/update_labels.json -d "{\"labels\": [\"美食\",\"java\"]}"

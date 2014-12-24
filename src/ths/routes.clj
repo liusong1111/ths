@@ -9,7 +9,8 @@
             [com.postspectacular.rotor :as rotor]
             [clojure.java.io :as io]
             [taoensso.timbre :as timbre]
-            [ths.models :as m])
+            [ths.models :as m]
+            [ths.huanxin :as h])
   (:use ths.utils)
   )
 
@@ -60,6 +61,7 @@
         _ (when (:tempfile image)
             (FileUtils/forceMkdir (File. sign-image-path))
             (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
+    (h/users-create (generate-huanxin-username email) password username)
     (json-response user)
     )
   )
@@ -69,6 +71,9 @@
   (when (:tempfile image)
     (FileUtils/forceMkdir (File. (str image-path "/" id)))
     (io/copy (:tempfile image) (io/file image-path id (:filename image)))
+    )
+  (if-let [password (:password attrs)]
+    (h/users-update-password (generate-huanxin-username (:email (m/users-show id))) password)
     )
   (json-response (m/users-show id))
   )
