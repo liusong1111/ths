@@ -27,7 +27,7 @@
   (if error
     (do
       (logger/error "error while fetching token")
-      (swap! token-info assoc :fetcher (fetch-token))
+      (swap! token-info assoc :fetcher (future (Thread/sleep 2000) (fetch-token)))
       )
 
     (let [data (json/parse-string body true)
