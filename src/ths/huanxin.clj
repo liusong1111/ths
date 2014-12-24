@@ -12,7 +12,9 @@
         {:keys [token expire-at fetcher]} ti]
     (if (or (not token) (not expire-at) (t/after? (t/now) expire-at))
       (do
-        @(:fetcher ti)
+        (let [fetcher (or fetcher (->> (fetch-token) (swap! token-info assoc :fetcher)))]
+          @fetcher
+          )
         ;(get-token)
         (recur)
         )
