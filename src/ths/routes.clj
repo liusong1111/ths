@@ -54,14 +54,15 @@
 (defn users-show [id]
   (json-response (m/users-show id)))
 
-(defn users-create [username password email phone sex birth image]
-  (let [user (m/users-create username password email phone sex birth (:filename image))
+(defn users-create [username password email phone sex birth city image]
+  (let [huanxin_username (generate-huanxin-username email)
+        user (m/users-create username password email phone sex birth city huanxin_username (:filename image))
         user_id (:id user)
         sign-image-path (str image-path "/" user_id)
         _ (when (:tempfile image)
             (FileUtils/forceMkdir (File. sign-image-path))
             (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
-    (h/users-create (generate-huanxin-username email) password username)
+    (h/users-create huanxin_username password username)
     (json-response user)
     )
   )
@@ -156,10 +157,10 @@
            ;; users
            (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
            (GET "/users/:id.json" [id] (users-show id))
-           (POST "/users.json" [username password email phone sex birth image] (users-create username password email phone sex birth image))
+           (POST "/users.json" [username password email phone sex birth city image] (users-create username password email phone sex birth city image))
            (PUT "/users/:id.json" {params :params} (let [id (:id params)
                                                          image (:image params)
-                                                         attrs (-> (select-keys params [:username :password :email :phone :sex :birth])
+                                                         attrs (-> (select-keys params [:username :password :email :phone :sex :birth :city])
                                                                    (assoc :image (:filename image))
                                                                    remove-blank-values
                                                                    )] (users-update id attrs image)))

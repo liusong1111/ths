@@ -68,15 +68,17 @@
                  (where {:id id})
                  (limit 1))))
 
-(defn users-create [username password email phone sex birth image]
+(defn users-create [username password email phone sex birth city huanxin_username image]
   (-> (insert users
-              (values {:username username
-                       :password password
-                       :email    email
-                       :phone    phone
-                       :sex      sex
-                       :birth    birth
-                       :image    image}))
+              (values {:username         username
+                       :password         password
+                       :email            email
+                       :phone            phone
+                       :sex              sex
+                       :birth            birth
+                       :city             city
+                       :huanxin_username huanxin_username
+                       :image            image}))
       ((keyword "last_insert_rowid()"))
       users-show
       )
