@@ -36,10 +36,9 @@
   (let [user (m/auth email password)]
     (if user
       (json-response {
-                      :code         "ok"
-                      :token        (generate-login-token (:id user) email)
-                      :huanxin_user (generate-huanxin-username email)
-                      :user         user
+                      :code  "ok"
+                      :token (generate-login-token (:id user) email)
+                      :user  user
                       })
       {:status  401
        :headers {}
@@ -74,7 +73,7 @@
     (io/copy (:tempfile image) (io/file image-path id (:filename image)))
     )
   (if-let [password (:password attrs)]
-    (h/users-update-password (generate-huanxin-username (:email (m/users-show id))) password)
+    (h/users-update-password (:huanxin_username (m/users-show id)) password)
     )
   (json-response (m/users-show id))
   )
