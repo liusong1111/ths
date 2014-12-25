@@ -16,7 +16,9 @@
                         (-> v
                             (assoc :labels (map :label_name (:user_labels v)))
                             (dissoc :user_labels :password)
-                            (assoc :image (if (str/blank? (:image v)) nil (str site-root "/signs/" (:id v) "/" (:image v)))))
+                            ;(assoc :image (if (str/blank? (:image v)) nil (str site-root "/signs/" (:id v) "/" (:image v))))
+                            (assoc :image (if (str/blank? (:image v)) nil (str "/signs/" (:id v) "/" (:image v))))
+                            )
                         ))
            )
 
