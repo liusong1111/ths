@@ -33,13 +33,14 @@
     HTTP BODY:
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu","id":1,"image":"0015.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
 
-## 注册用户(TODO:在response里出现环信帐号，在users表里建一个huanxin_username的字段存储;环信密码跟用户密码一样)
-    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu1" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
+## 注册用户
+    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu1" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01" -F "city=beijing"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"username":"sliu1","id":1,"image":"2.jpg","created_at":"2014-12-18 16:20:54","birth":"1980-01-01"}
     注: 本步server会在环信上注册帐号，用户名为对email的sha1编码。
+    response里含huanxin_username字段
 
 ## 修改用户信息
     curl -X PUT http://127.0.0.1:3000/users/1.json -F "image=@0015.jpg" -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"

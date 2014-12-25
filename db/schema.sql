@@ -6,6 +6,7 @@ CREATE TABLE users (
   phone            char(255),
   sex              char(255),
   birth            char(255),
+  city             char(255),
   image            char(255),
   huanxin_username char(255),
   created_at       timestamp DEFAULT current_timestamp
