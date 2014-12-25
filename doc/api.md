@@ -1,15 +1,19 @@
 # TODO
   * response json format
 
-# 登录(TODO: user.labels)
+# 登录
     curl -i -X POST http://127.0.0.1:3000/login.json -d "email=liusong1111@gmail.com&password=aaaaaa"
     # 返回格式例如
     HTTP STATUS: 200
     HTTP BODY:
-    {"code":"ok","token":"liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0","huanxin_user":"4c36aba13d16f79ed79a29eec4bfbde0163e2d4f","user":{"id":2,"username":"sliu","password":"aaaaaa","email":"liusong1111@gmail.com","phone":"15522602848","created_at":"2014-11-12T14:33:27.000Z","updated_at":"2014-11-12T14:33:27.000Z","labels":["美食","java1"]}}
+    {"code":"ok","token":"1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0","user":{"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"city":"beijing","username":"sliu","huanxin_username":"4c36aba13d16f79ed79a29eec4bfbde0163e2d4f","id":1,"image":"http://10.0.2.2:3000/signs/1/0015.jpg","created_at":"2014-12-25 09:26:53","birth":"1980-01-01"}}
     #注：回复的body里，有token字段和huanxin_user字段
     #后续所有请求，请求的headers里，必须带一个头"x-token:收到的token"
     #huanxin_user是该用户在环信上的用户名
+    如果登录失败，返回：
+    HTTP STATUS: 401
+    HTTP BODY:
+    {"code":"fail","message":"用户名或密码不正确"}
 
 # 用户管理(TODO: json回来的，不能包含password)
 

@@ -40,9 +40,10 @@
                       :token (generate-login-token (:id user) email)
                       :user  user
                       })
-      {:status  401
-       :headers {}
-       :body    ""}
+      (json-response {
+                      :code    "fail"
+                      :message "用户名或密码不正确"
+                      } 401)
       ))
   )
 
