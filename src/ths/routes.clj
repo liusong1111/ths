@@ -79,7 +79,8 @@
   )
 
 (defn users-update-labels [id labels]
-  (json-response (m/users-update-labels id labels)))
+  (m/users-update-labels id labels)
+  (json-response (m/users-show id)))
 
 (defn users-destroy [id]
   (json-response (m/users-destroy id)))
