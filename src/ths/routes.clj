@@ -84,6 +84,8 @@
   (json-response (m/users-show id)))
 
 (defn users-destroy [id]
+  (if-let [user (m/users-show id)]
+    (h/users-destroy (:huanxin_username user)))
   (json-response (m/users-destroy id)))
 
 ;; labels

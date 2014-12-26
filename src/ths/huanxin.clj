@@ -59,7 +59,7 @@
 
 ;;------
 ; http client接口封装
-(defn http-request [method uri params]
+(defn http-request [method uri & [params]]
   (http/request
     {
      :url     (str huanxin-url-root uri)
@@ -69,7 +69,7 @@
                "Authorization" (str "Bearer " (get-token))
                "Accept"        "application/json"
                }
-     :body    (json/generate-string params)
+     :body    (if params (json/generate-string params))
      }
     (fn [{:keys [status headers body error opts] :as response}]
       (if error
@@ -96,6 +96,10 @@
                  :newpassword newpassword
                  })
   )
+
+; 删除用户
+(defn users-destroy [username]
+  (http-request :delete (str "/users/" username)))
 
 (defn -main []
   (println "fetching...")
