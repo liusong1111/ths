@@ -99,6 +99,12 @@
                  (where {:id id})
                  (limit 1))))
 
+(defn users-by-huanxin-username [huanxin-username]
+  (first (select users
+                 (with user_labels)
+                 (where {:huanxin_username huanxin-username})
+                 (limit 1))))
+
 (defn users-create [username password email phone sex birth city huanxin_username image]
   (-> (insert users
               (values {:username         username
@@ -188,6 +194,15 @@
                  ;(with users)
                  (with replies)
                  (where {:id id})
+                 (limit 1)))
+  )
+
+(defn topics-by-huanxin-group-id [huanxin-group-id]
+  (first (select topics
+                 (join users)
+                 ;(with users)
+                 (with replies)
+                 (where {:huanxin_group_id huanxin-group-id})
                  (limit 1)))
   )
 

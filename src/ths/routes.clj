@@ -154,6 +154,16 @@
   (json-response (m/recommendations current_user_id))
   )
 
+(defn huanxin-hid2sids [entries]
+  (println entries)
+  (let [entries (doall (for [entry entries]
+                         (if (:is_group entry)
+                           (assoc (m/topics-by-huanxin-group-id (:username entry)) :type "topic")
+                           (assoc (m/users-by-huanxin-username (:username entry)) :type "user")
+                           )))]
+    (json-response entries))
+  )
+
 ;; friends
 (defn invitations-index [user_id]
   (json-response (m/invitations-index user_id)))
@@ -223,6 +233,7 @@
            ;(DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
 
            (GET "/recommendations.json" [current_user_id] (recommendations current_user_id))
+           (POST "/huanxin/hid2sids.json" [entries] (huanxin-hid2sids entries))
 
            ;; friends
            (GET "/users/:id/invitations.json" [id] (invitations-index id))
