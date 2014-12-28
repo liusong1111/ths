@@ -109,7 +109,7 @@
 (defn topics-create [current_user_id subject body label_name]
   (let [topic (m/topics-create current_user_id subject body label_name)
         user (m/users-show current_user_id)
-        {:keys [error result]} @(h/groups-create (str (:id topic)) (:huanxin_username user))
+        {:keys [error result]} @(h/groups-create (str (:subject topic)) (:huanxin_username user))
         huanxin-group-id (if (not error) (get-in result [:data :group_id]))
         _ (if (not error) (m/topics-update-huanxin-group-id (:id topic) huanxin-group-id))
         topic (assoc topic :huanxin_group_id huanxin-group-id)
@@ -118,12 +118,13 @@
     )
   )
 
-(defn topics-update [id subject body label_name]
-  (json-response (m/topics-update id subject body label_name)))
-
-(defn topics-destroy [id]
-  (json-response (m/topics-destroy id))
-  )
+;; 不要了
+;(defn topics-update [id subject body label_name]
+;  (json-response (m/topics-update id subject body label_name)))
+;
+;(defn topics-destroy [id]
+;  (json-response (m/topics-destroy id))
+;  )
 
 (defn topic-replies-index [topic_id]
   (json-response (m/topic-replies-index topic_id)))
@@ -194,14 +195,16 @@
            (GET "/topics.json" [current_user_id user_id page] (topics-index current_user_id user_id (Integer. (or page "1"))))
            (GET "/topics/:id.json" [id] (topics-show id))
            (POST "/topics.json" [current_user_id subject body label_name] (topics-create current_user_id subject body label_name))
-           (PUT "/topics/:id.json" [id subject body label_name] (topics-update id subject body label_name))
-           (DELETE "/topics/:id.json" [id] (topics-destroy id))
+           ;; 不要了
+           ;(PUT "/topics/:id.json" [id subject body label_name] (topics-update id subject body label_name))
+           ;(DELETE "/topics/:id.json" [id] (topics-destroy id))
 
            ;; replies
            (GET "/topics/:topic_id/replies.json" [topic_id] (topic-replies-index topic_id))
            (POST "/topics/:topic_id/replies.json" [current_user_id topic_id body] (topic-replies-create current_user_id topic_id body))
-           (PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
-           (DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
+           ;; 不要了
+           ;(PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
+           ;(DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
 
            ;; friends
            (GET "/users/:id/invitations.json" [id] (invitations-index id))

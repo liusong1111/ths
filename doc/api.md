@@ -105,6 +105,11 @@
       label_name: "yyy",
       body: "yyy",
       user_id: 33,
+      user: {  #TODO
+        username: "xx",
+        email: "xxx",
+        labels: ["xx", "yy"]
+      },
       created_at: "2014-11-33 ...",
       replies: [
         {
@@ -119,6 +124,17 @@
       ]
     }
 
+## 查看某话题的参与者列表(TODO:)
+    curl http://127.0.0.1:3000/topics/1/users.json
+
+    [
+      {
+        "username": "xxx",
+      },
+      {
+
+      }
+    ]
 
 ## 发表话题
     curl -X POST -H "Content-Type:application/json" -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0" http://127.0.0.1:3000/topics.json -d "{\"subject\":\"清蒸鲈鱼怎么做？\",\"body\":\"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。\",\"label_name\":\"美食\"}"
@@ -127,19 +143,6 @@
     HTTP BODY:
     {"id":1,"subject":"清蒸鲈鱼怎么做？","body":"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。","label_name":"美食","user_id":1,"created_at":"2014-11-12T15:00:11.554Z","updated_at":"2014-11-12T15:00:11.554Z"}
 
-## 修改话题
-    PATCH/PUT /topics/1.json
-    curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/topics/1.json -d "{\"subject\":\"清蒸鲈鱼怎么做？\",\"body\":\"蒸一下就好了\",\"label_name\":\"美食\"}"
-    #返回格式例如：
-    HTTP STATUS: 200
-    HTTP BODY:
-    {"id":1,"subject":"清蒸鲈鱼怎么做？","body":"蒸一下就好了","label_name":"美食","user_id":1,"created_at":"2014-11-12T15:00:11.000Z","updated_at":"2014-11-12T15:04:03.225Z"}
-
-## 删除话题
-    DELETE /topics/1.json
-    curl -X DELETE -H "Content-Type:application/json" http://127.0.0.1:3000/topics/1.json
-    返回格式例如：
-    HTTP STATUS: 204
 
 # 回复管理
 
@@ -157,17 +160,6 @@
     HTTP BODY:
     {"id":2,"topic_id":2,"body":"爱怎么做怎么做","user_id":1,"created_at":"2014-11-12T15:14:22.924Z","updated_at":"2014-11-12T15:14:22.924Z"}
 
-## 修改回复(可不实现)
-    curl -X PUT -H "Content-Type:application/json" http://127.0.0.1:3000/topics/2/replies/4.json -d "{\"body\":\"这个好啊\"}"
-    #返回格式例如：
-    HTTP STATUS: 200
-    HTTP BODY:
-    {"id":4,"topic_id":2,"body":"这个好啊","user_id":null,"created_at":"2014-11-12T15:17:20.000Z","updated_at":"2014-11-12T15:22:58.212Z"}
-
-## 删除回复(可不实现)
-    curl -X DELETE -H "Content-Type:application/json" http://127.0.0.1:3000/topics/2/replies/4.json
-    返回格式例如：
-    HTTP STATUS: 204
 
 # 好友
 
