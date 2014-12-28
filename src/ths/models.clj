@@ -161,11 +161,15 @@
   )
 
 (defn topics-create [current_user_id subject body label_name]
-  (insert topics
-          (values {:subject    subject
-                   :body       body
-                   :label_name label_name
-                   :user_id    current_user_id})))
+  (-> (insert topics
+              (values {:subject    subject
+                       :body       body
+                       :label_name label_name
+                       :user_id    current_user_id}))
+      ((keyword "last_insert_rowid()"))
+      topics-show
+      )
+  )
 
 (defn topics-update [id subject body label_name]
   (update topics
@@ -175,6 +179,14 @@
                        :label_name label_name
                        })
           (where {:id id})))
+
+(defn topics-update-huanxin-group-id [id huanxin_group_id]
+  (update topics
+          (set-fields {
+                       :huanxin_group_id huanxin_group_id
+                       })
+          (where {:id id})))
+
 
 (defn topics-destroy [id]
   (delete topics

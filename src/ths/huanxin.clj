@@ -59,24 +59,31 @@
 
 ;;------
 ; http client接口封装
-(defn http-request [method uri & [params]]
-  (http/request
-    {
-     :url     (str huanxin-url-root uri)
-     :method  method
-     :headers {
-               "Content-Type"  "application/json"
-               "Authorization" (str "Bearer " (get-token))
-               "Accept"        "application/json"
-               }
-     :body    (if params (json/generate-string params))
-     }
-    (fn [{:keys [status headers body error opts] :as response}]
-      (if error
-        (logger/error error)
-        (let [data (json/parse-string body true)]
-          (logger/info data)))
-      )
+(defn http-request [method uri & [params callback]]
+  (let [reply (promise)
+        _ (http/request
+            {
+             :url     (str huanxin-url-root uri)
+             :method  method
+             :headers {
+                       "Content-Type"  "application/json"
+                       "Authorization" (str "Bearer " (get-token))
+                       "Accept"        "application/json"
+                       }
+             :body    (if params (json/generate-string params))
+             }
+            (fn [{:keys [status headers body error opts] :as response}]
+              (let [result (if (and (not error) body)
+                             (json/parse-string body)
+                             )
+                    response (assoc response :result result)]
+                (logger/info response)
+                (if callback (callback response))
+                (deliver reply response))
+              )
+            )
+        ]
+    reply
     )
   )
 ;;------
@@ -100,6 +107,17 @@
 ; 删除用户
 (defn users-destroy [username]
   (http-request :delete (str "/users/" username)))
+
+; 建群组/发话题
+(defn groups-create [groupname owner]
+  (http-request :post "/chatgroups" {
+                                     :groupname groupname
+                                     :desc      ""
+                                     :public    true
+                                     :approval  false
+                                     :owner     owner
+                                     :members   [owner]
+                                     }))
 
 (defn -main []
   (println "fetching...")

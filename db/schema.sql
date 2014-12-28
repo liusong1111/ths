@@ -19,12 +19,13 @@ CREATE TABLE labels (
 );
 
 CREATE TABLE topics (
-  id         INTEGER PRIMARY KEY,
-  subject    char(255),
-  body       TEXT,
-  label_name char(255),
-  user_id    INTEGER,
-  created_at timestamp DEFAULT current_timestamp
+  id               INTEGER PRIMARY KEY,
+  subject          char(255),
+  body             TEXT,
+  label_name       char(255),
+  user_id          INTEGER,
+  huanxin_group_id char(255),
+  created_at       timestamp DEFAULT current_timestamp
 );
 
 CREATE TABLE replies (

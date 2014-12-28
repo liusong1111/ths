@@ -10,7 +10,8 @@
             [clojure.java.io :as io]
             [taoensso.timbre :as timbre]
             [ths.models :as m]
-            [ths.huanxin :as h])
+            [ths.huanxin :as h]
+            [cheshire.core :as json])
   (:use ths.utils)
   )
 
@@ -106,7 +107,16 @@
   (json-response (m/topics-show id)))
 
 (defn topics-create [current_user_id subject body label_name]
-  (json-response (m/topics-create current_user_id subject body label_name)))
+  (let [topic (m/topics-create current_user_id subject body label_name)
+        user (m/users-show current_user_id)
+        {:keys [error result]} @(h/groups-create (str (:id topic)) (:huanxin_username user))
+        huanxin-group-id (if (not error) (get-in result [:data :group_id]))
+        _ (if (not error) (m/topics-update-huanxin-group-id (:id topic) huanxin-group-id))
+        topic (assoc topic :huanxin_group_id huanxin-group-id)
+        ]
+    (json-response topic)
+    )
+  )
 
 (defn topics-update [id subject body label_name]
   (json-response (m/topics-update id subject body label_name)))
