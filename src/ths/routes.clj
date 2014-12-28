@@ -48,6 +48,12 @@
       ))
   )
 
+(defn forget_password [email]
+  (json-response {
+                  :code "ok"
+                  })
+  )
+
 ;; users
 (defn users-index [q label_name topic_id page]
   (json-response (m/users-all q label_name topic_id page)))
@@ -193,6 +199,8 @@
 
            ;; login
            (POST "/login.json" [email password] (login email password))
+           ;; forget password
+           (POST "/forget_password.json" [email] (forget_password email))
 
            ;; users
            (GET "/users.json" [q label_name topic_id page] (users-index q label_name topic_id (Integer. (or page "1"))))

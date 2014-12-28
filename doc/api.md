@@ -13,6 +13,12 @@
     HTTP BODY:
     {"code":"fail","message":"用户名或密码不正确"}
 
+# 忘记密码
+    curl -X POST http://127.0.0.1:3000/forget_password.json -d "email=liusong1111@gmail.com"
+    返回HTTP STATUS: 200
+    请app提示用户，密码重置链接已发送到该邮箱，请查收邮件
+
+
 # 用户管理
 
 ## 得到用户列表

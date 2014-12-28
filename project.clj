@@ -20,6 +20,7 @@
                            [http-kit "2.1.16"]
                            [cheshire "5.3.1"]
                            [clj-time "0.8.0"]
+                           [com.draines/postal "1.11.3"]
                            ]
             :plugins [[lein-ring "0.8.13"]]
             :ring {:handler ths.routes/app
