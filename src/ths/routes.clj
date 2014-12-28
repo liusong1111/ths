@@ -11,7 +11,8 @@
             [taoensso.timbre :as timbre]
             [ths.models :as m]
             [ths.huanxin :as h]
-            [cheshire.core :as json])
+            [cheshire.core :as json]
+            [postal.core :as mailer])
   (:use ths.utils)
   )
 
@@ -271,8 +272,16 @@
     )
   )
 
+;(defn -main []
+;  (users-create "abc" "abc" "abc@g.com" "" "" "" "" {
+;                                                     :filename "abc.jpg"
+;                                                     :tempfile (File. "/Users/sliu/devices.sql")
+;                                                     }))
+
 (defn -main []
-  (users-create "abc" "abc" "abc@g.com" "" "" "" "" {
-                                                     :filename "abc.jpg"
-                                                     :tempfile (File. "/Users/sliu/devices.sql")
-                                                     }))
+  (println (mailer/send-message {
+                                 :from    "liusong1111@gmail.com"
+                                 :to      ["liusong1111@gmail.com"]
+                                 :subject "这是一个测试"
+                                 :body    "哈哈\n呼呼"
+                                 })))

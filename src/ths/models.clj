@@ -7,7 +7,7 @@
         ths.utils
         ))
 
-(declare users labels topics replies user_labels)
+(declare users labels topics replies user_labels is-friend?)
 
 (defdb db-spec (sqlite3 {:db db-path}))
 
@@ -281,7 +281,8 @@
       )
     (for [user (select users
                        (limit 20))]
-      (assoc user :type "user")
+
+      (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
       )
     )
   )
@@ -341,6 +342,13 @@
                       :friend_id friend_id}
                      {:user_id   friend_id
                       :friend_id current_user_id}))))
+
+(defn is-friend? [user-id friend-id]
+  (first (select friends
+                 (where {:user_id   user-id
+                         :friend_id friend-id
+                         })))
+  )
 
 (defn friends-index [user_id]
   (let [my-friends (select friends
