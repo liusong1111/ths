@@ -230,3 +230,9 @@
     (wrap-restful-params)
     )
   )
+
+(defn -main []
+  (users-create "abc" "abc" "abc@g.com" "" "" "" "" {
+                                                     :filename "abc.jpg"
+                                                     :tempfile (File. "/Users/sliu/devices.sql")
+                                                     }))
