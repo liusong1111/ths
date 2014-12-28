@@ -200,7 +200,8 @@
         "id": 2,
         "image": "/signs/2/0015.jpg",
         "created_at": "2014-12-28 05:49:09",
-        "birth": "1980-01-01"
+        "birth": "1980-01-01",
+        "is_friend": false
       },
       {
         "labels": [],
@@ -214,7 +215,8 @@
         "id": 1,
         "image": "/signs/1/0015.jpg",
         "created_at": "2014-12-28 05:44:25",
-        "birth": "1980-01-01"
+        "birth": "1980-01-01",
+        "is_friend": false
       },
       {
         "type": "topic",

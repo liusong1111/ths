@@ -281,7 +281,6 @@
       )
     (for [user (select users
                        (limit 20))]
-
       (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
       )
     )
@@ -344,10 +343,10 @@
                       :friend_id current_user_id}))))
 
 (defn is-friend? [user-id friend-id]
-  (first (select friends
-                 (where {:user_id   user-id
-                         :friend_id friend-id
-                         })))
+  (not (nil? (first (select friends
+                            (where {:user_id   user-id
+                                    :friend_id friend-id
+                                    })))))
   )
 
 (defn friends-index [user_id]
