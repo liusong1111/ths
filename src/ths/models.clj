@@ -201,12 +201,22 @@
           (order :created_at :DESC)
           (limit 20)))
 
+(defn topic-replies-show [reply_id]
+  (first (select replies
+                 (where {:id reply_id})
+                 (limit 1)))
+  )
+
 (defn topic-replies-create [current_user_id topic_id body]
-  (insert replies
-          (values {:topic_id topic_id
-                   :body     body
-                   :user_id  current_user_id
-                   })))
+  (-> (insert replies
+              (values {:topic_id topic_id
+                       :body     body
+                       :user_id  current_user_id
+                       }))
+      ((keyword "last_insert_rowid()"))
+      topic-replies-show
+      )
+  )
 
 (defn topic-replies-update [topic_id reply_id body]
   (update replies

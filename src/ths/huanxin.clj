@@ -118,6 +118,32 @@
                                      :owner     owner
                                      :members   [owner]
                                      }))
+; 向群组加成员
+(defn groups-add-member [huanxin-group-id huanxin-username]
+  (http-request :post (str "/chatgroups/" huanxin-group-id "/users/" huanxin-username)))
+
+; 发送文本消息
+(defn messages-post-text [target_type target msg from]
+  (http-request :post "/messages" {
+                                   ;users 给用户发消息, chatgroups 给群发消息
+                                   :target_type target_type
+
+                                   ;注意这里需要用数组,数组长度建议不大于20, 即使只有一个用户,
+                                   ;也要用数组 ['u1'], 给用户发送时数组元素是用户名,给群组发送时
+                                   ;数组元素是groupid
+                                   :target      target
+
+                                   :msg         {
+                                                 :type "txt"
+                                                 :msg  msg
+                                                 }
+
+                                   ;表示这个消息是谁发出来的, 可以没有这个属性, 那么就会显示是admin, 如果有的话, 则会显示是这个用户发出的
+                                   :from        from
+
+                                   ;扩展属性, 由app自己定义.可以没有这个字段，但是如果有，值不能是“ext:null“这种形式，否则出错
+                                   ;:ext {}
+                                   }))
 
 (defn -main []
   (println "fetching...")

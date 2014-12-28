@@ -130,13 +130,25 @@
   (json-response (m/topic-replies-index topic_id)))
 
 (defn topic-replies-create [current_user_id topic_id body]
-  (json-response (m/topic-replies-create current_user_id topic_id body)))
+  (let [
+        user (m/users-show current_user_id)
+        huanxin_username (:huanxin_username user)
+        reply (m/topic-replies-create current_user_id topic_id body)
+        topic (m/topics-show topic_id)
+        huanxin_group_id (:huanxin_group_id topic)
+        _ (h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username)
+        _ (h/groups-add-member huanxin_group_id huanxin_username)
+        ]
+    (json-response reply)
+    )
+  )
 
-(defn topic-replies-update [topic_id reply_id body]
-  (json-response (m/topic-replies-update topic_id reply_id body)))
-
-(defn topic-replies-destroy [topic_id reply_id]
-  (json-response (m/topic-replies-destroy topic_id reply_id)))
+;; 不要了
+;(defn topic-replies-update [topic_id reply_id body]
+;  (json-response (m/topic-replies-update topic_id reply_id body)))
+;
+;(defn topic-replies-destroy [topic_id reply_id]
+;  (json-response (m/topic-replies-destroy topic_id reply_id)))
 
 ;; friends
 (defn invitations-index [user_id]

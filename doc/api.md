@@ -35,7 +35,7 @@
     {"labels":["美食","java"],"email":"liusong1111@gmail.com","sex":"male","phone":null,"city":"beijing","username":"sliu","huanxin_username":"4c36aba13d16f79ed79a29eec4bfbde0163e2d4f","id":1,"image":"http://10.0.2.2:3000/signs/1/0015.jpg","created_at":"2014-12-25 09:26:53","birth":"1980-01-01"}
 
 ## 注册用户
-    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=sliu1" -F "password=aaaaaa" -F "email=aliusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01" -F "city=beijing"
+    curl -X POST http://127.0.0.1:3000/users.json -F "image=@0015.jpg" -F "username=liusong" -F "password=aaaaaa" -F "email=aliusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01" -F "city=beijing"
     #返回格式例如：
     HTTP STATUS: 201
     HTTP BODY:
