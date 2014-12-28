@@ -110,7 +110,7 @@
   (let [topic (m/topics-create current_user_id subject body label_name)
         user (m/users-show current_user_id)
         {:keys [error result]} @(h/groups-create (str (:subject topic)) (:huanxin_username user))
-        huanxin-group-id (if (not error) (get-in result [:data :group_id]))
+        huanxin-group-id (if (not error) (get-in result [:data :groupid]))
         _ (if (not error) (m/topics-update-huanxin-group-id (:id topic) huanxin-group-id))
         topic (assoc topic :huanxin_group_id huanxin-group-id)
         ]

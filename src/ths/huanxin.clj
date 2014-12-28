@@ -74,7 +74,7 @@
              }
             (fn [{:keys [status headers body error opts] :as response}]
               (let [result (if (and (not error) body)
-                             (json/parse-string body)
+                             (json/parse-string body true)
                              )
                     response (assoc response :result result)]
                 (logger/info response)
