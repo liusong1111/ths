@@ -25,6 +25,9 @@
 ## 标签下的用户
     curl http://127.0.0.1:3000/users.json?label_name=美食
 
+## 参与话题的用户
+      curl http://127.0.0.1:3000/users.json?topic_id=1
+
 ## 搜用户
     curl http://127.0.0.1:3000/users.json?q=美&page=1
     注：按username或label_name模糊搜索
@@ -80,8 +83,6 @@
 ## 搜标签
     GET /labels.json?q=美食
 
-## 首页推荐(TODO: 人和话题混着发的列表）
-
 
 # 主题管理
 
@@ -98,7 +99,7 @@
     GET /topics.json?user_id=1&page=1
     curl http://127.0.0.1:3000/topics.json?user_id=1&page=1
 
-## 查看某话题的详细聊天信息（包括回复）(TODO: replies以降序排列）
+## 查看某话题的详细聊天信息（包括回复、发件人信息）(TODO: replies以降序排列）
     GET /topics/1.json
     curl http://127.0.0.1:3000/topics/1.json
     返回
@@ -107,7 +108,7 @@
       label_name: "yyy",
       body: "yyy",
       user_id: 33,
-      user: {  #TODO
+      user: {
         username: "xx",
         email: "xxx",
         labels: ["xx", "yy"]
@@ -126,17 +127,6 @@
       ]
     }
 
-## 查看某话题的参与者列表(TODO:)
-    curl http://127.0.0.1:3000/topics/1/users.json
-
-    [
-      {
-        "username": "xxx",
-      },
-      {
-
-      }
-    ]
 
 ## 发表话题
     curl -X POST -H "Content-Type:application/json" -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0" http://127.0.0.1:3000/topics.json -d "{\"subject\":\"清蒸鲈鱼怎么做？\",\"body\":\"材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。\",\"label_name\":\"美食\"}"
@@ -185,6 +175,20 @@
 
 ## 得到某人的好友列表
     curl http://127.0.0.1:3000/users/1/friends.json
+
+# 首页
+
+## 找签客首页
+    curl http://127.0.0.1:3000/recommendations.json
+    response:
+
+
+## 来信-环信用户/组列表兑换系统列表
+
+    curl -X POST http://127.0.0.1:3000/huanxin/hid2sids.json -d '[{"username":"4c36aba13d16f79ed79a29eec4bfbde0163e2d4f","is_group":false},{"username":"0b1e2ab34877d89a38be262315ace928c4a6b764","is_group":false}]'
+    response:
+
+
 
 
 

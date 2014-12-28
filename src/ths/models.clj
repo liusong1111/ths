@@ -1,5 +1,6 @@
 (ns ths.models
-  (:require [clojure.string :as str])
+  (:require [clojure.string :as str]
+            [cheshire.core :as json])
   (:use korma.config
         korma.core
         korma.db
@@ -12,6 +13,7 @@
 
 (defentity users
            (has-many user_labels {:fk :user_id})
+           (has-many topics {:fk :user_id})
            (transform (fn [v]
                         (-> v
                             (assoc :labels (map :label_name (:user_labels v)))
@@ -26,7 +28,12 @@
            (pk :label_name))
 
 (defentity topics
-           (has-many replies {:fk :topic_id}))
+           (has-many replies {:fk :topic_id :order ["kkkk"]})
+           (belongs-to users {:fk :user_id})
+           (transform (fn [v]
+                        (-> v
+                            (assoc :user (first (select users (where {:id (:user_id v)}) (limit 1)))))))
+           )
 
 (defentity replies
            (belongs-to topics {:fk :topic_id}))
@@ -53,7 +60,24 @@
   )
 
 ;; users
-(defn users-all [q label_name page]
+;(defn users-all [q label_name topic_id page]
+;  (cond-> (select* users)
+;          true (join user_labels)
+;          true (with user_labels)
+;          (not (clojure.string/blank? q)) (where (or {(keyword "user_labels.label_name") [like (str "%" q "%")]} {:username [like (str "%" q "%")]}))
+;          (not (clojure.string/blank? label_name)) (where {(keyword "user_labels.label_name") label_name})
+;          (not (clojure.string/blank? topic_id)) (-> (join topics) (join replies (= :replies.topic_id :topics.id))
+;                                                     (where (or {(keyword "topics.id") topic_id} {(keyword "replies.topic_id") topic_id}))
+;                                                     )
+;          true (limit 20)
+;          true (offset (* (- page 1) 20))
+;          ;true (as-sql)
+;          ;true (println)
+;          true (select)
+;
+;          ))
+
+(defn users-all [q label_name topic_id page]
   (cond-> (select* users)
           true (join user_labels)
           true (with user_labels)
@@ -61,8 +85,13 @@
           (not (clojure.string/blank? label_name)) (where {(keyword "user_labels.label_name") label_name})
           true (limit 20)
           true (offset (* (- page 1) 20))
+          ;true (as-sql)
+          ;true (println)
           true (select)
+
           ))
+
+
 
 (defn users-show [id]
   (first (select users
@@ -155,6 +184,8 @@
 
 (defn topics-show [id]
   (first (select topics
+                 (join users)
+                 ;(with users)
                  (with replies)
                  (where {:id id})
                  (limit 1)))
@@ -227,6 +258,20 @@
   (delete replies
           (where {:id reply_id})))
 
+(defn recommendations [current_user_id]
+  (into
+    (for [topic (select topics
+                        (limit 20))]
+      (assoc topic :type "topic")
+      )
+    (for [user (select users
+                       (limit 20))]
+      (assoc user :type "user")
+      )
+    )
+  )
+
+
 ;; friends
 (defn invitations-index [inviter_id]
   (select invitations
@@ -292,6 +337,10 @@
             (with user_labels)
             (where {:id [in friend-ids]}))
     ))
+
+(defn -main []
+  (println (json/generate-string (topics-show 1)))
+  )
 
 
 

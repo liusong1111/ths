@@ -49,8 +49,8 @@
   )
 
 ;; users
-(defn users-index [q label_name page]
-  (json-response (m/users-all q label_name page)))
+(defn users-index [q label_name topic_id page]
+  (json-response (m/users-all q label_name topic_id page)))
 
 (defn users-show [id]
   (json-response (m/users-show id)))
@@ -150,6 +150,10 @@
 ;(defn topic-replies-destroy [topic_id reply_id]
 ;  (json-response (m/topic-replies-destroy topic_id reply_id)))
 
+(defn recommendations [current_user_id]
+  (json-response (m/recommendations current_user_id))
+  )
+
 ;; friends
 (defn invitations-index [user_id]
   (json-response (m/invitations-index user_id)))
@@ -181,7 +185,7 @@
            (POST "/login.json" [email password] (login email password))
 
            ;; users
-           (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
+           (GET "/users.json" [q label_name topic_id page] (users-index q label_name topic_id (Integer. (or page "1"))))
            (GET "/users/:id.json" [id] (users-show id))
            (POST "/users.json" [username password email phone sex birth city image] (users-create username password email phone sex birth city image))
            (PUT "/users/:id.json" {params :params} (let [id (:id params)
@@ -217,6 +221,8 @@
            ;; 不要了
            ;(PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
            ;(DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
+
+           (GET "/recommendations.json" [current_user_id] (recommendations current_user_id))
 
            ;; friends
            (GET "/users/:id/invitations.json" [id] (invitations-index id))
