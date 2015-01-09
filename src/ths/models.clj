@@ -288,9 +288,9 @@
 
 
 ;; friends
-(defn invitations-index [inviter_id]
+(defn invitations-index [invitee_id]
   (select invitations
-          (where {:inviter_id inviter_id})
+          (where {:invitee_id invitee_id})
           (order :created_at :DESC)))
 
 (defn invitations-create [current_user_id invitee_id reason]
