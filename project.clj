@@ -12,6 +12,7 @@
                            [cheshire "5.3.1"]
                            ;[mysql/mysql-connector-java "5.1.26"]
                            [org.xerial/sqlite-jdbc "3.7.2"]
+                           [clj-postgresql "0.4.0"]
                            [com.taoensso/timbre "3.3.1"]
                            [com.postspectacular/rotor "0.1.0"]
                            [commons-io/commons-io "2.4"]
