@@ -190,6 +190,21 @@
     [
       {
         "labels": [],
+        "email": "wu1@gmail.com",
+        "sex": "male",
+        "phone": null,
+        "city": "beijing",
+        "username": "wu1",
+        "type": "user",
+        "huanxin_username": "66d71b5d88f8f1cdbf1f2a57cb2b048b49ec99a2",
+        "id": 3,
+        "image": "/signs/3/0015.jpg",
+        "created_at": "2014-12-28 08:53:51",
+        "birth": "1980-01-01",
+        "is_friend": false
+      },
+      {
+        "labels": [],
         "email": "wu@gmail.com",
         "sex": "male",
         "phone": null,
@@ -204,7 +219,10 @@
         "is_friend": false
       },
       {
-        "labels": [],
+        "labels": [
+          "美食",
+          "java"
+        ],
         "email": "liusong1111@gmail.com",
         "sex": "male",
         "phone": null,
