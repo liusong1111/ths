@@ -282,6 +282,7 @@
       (assoc topic :type "topic")
       )
     (for [user (select users
+                       (with user_labels)
                        (limit 20))]
       (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
       )
