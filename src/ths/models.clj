@@ -84,7 +84,7 @@
 ;
 ;          ))
 
-(defn users-all [q label_name topic_id page]
+(defn users-all [q label_name page]
   (cond-> (select* users)
           true (join user_labels)
           true (with user_labels)
