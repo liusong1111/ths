@@ -7,7 +7,7 @@
         ths.utils
         ))
 
-(declare users labels topics replies user_labels is-friend?)
+(declare users labels topics replies user_labels is-friend? users-show)
 
 (defdb db-spec (sqlite3 {:db db-path}))
 
@@ -42,7 +42,12 @@
            (belongs-to users {:fk :user_id})
            (belongs-to labels {:fk :label_name}))
 
-(defentity invitations)
+(defentity invitations
+           (transform (fn [v]
+                        (-> v
+                            (assoc :inviter (users-show (:inviter_id v)))
+                            )))
+           )
 
 (defentity friends)
 

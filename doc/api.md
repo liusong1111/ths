@@ -162,7 +162,35 @@
 # 好友
 
 ## 得到某人的好友申请列表
-    curl http://127.0.0.1:3000/users/1/invitations.json
+    curl http://127.0.0.1:3000/users/2/invitations.json
+
+    response:
+    [
+      {
+        "inviter": {
+          "labels": [
+            "美食",
+            "java"
+          ],
+          "email": "liusong1111@gmail.com",
+          "sex": "male",
+          "phone": null,
+          "city": "beijing",
+          "username": "liusong",
+          "huanxin_username": "4c36aba13d16f79ed79a29eec4bfbde0163e2d4f",
+          "id": 1,
+          "image": "/signs/1/0015.jpg",
+          "created_at": "2014-12-28 05:44:25",
+          "birth": "1980-01-01"
+        },
+        "created_at": "2015-01-10 14:04:54",
+        "status": "pending",
+        "reason": "hello",
+        "invitee_id": 2,
+        "inviter_id": 1,
+        "id": 1
+      }
+    ]
 
 ## 请求加好友
     curl -X POST http://127.0.0.1:3000/invitations.json -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0" -d "invitee_id=2&reason=hello"
