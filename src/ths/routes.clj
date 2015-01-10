@@ -66,7 +66,7 @@
   (let [huanxin_username (generate-huanxin-username email)
         user (m/users-create username password email phone sex birth city huanxin_username (:filename image))
         user_id (:id user)
-        sign-image-path (str image-path "/" user_id)
+        sign-image-path (str image-path "/" (refine-user-id-str user_id))
         _ (when (:tempfile image)
             (FileUtils/forceMkdir (File. sign-image-path))
             (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
@@ -78,8 +78,8 @@
 (defn users-update [id attrs image]
   (m/users-update id attrs)
   (when (:tempfile image)
-    (FileUtils/forceMkdir (File. (str image-path "/" id)))
-    (io/copy (:tempfile image) (io/file image-path id (:filename image)))
+    (FileUtils/forceMkdir (File. (str image-path "/" (refine-user-id-str id))))
+    (io/copy (:tempfile image) (io/file image-path (refine-user-id-str id) (:filename image)))
     )
   (if-let [password (:password attrs)]
     (h/users-update-password (:huanxin_username (m/users-show id)) password)

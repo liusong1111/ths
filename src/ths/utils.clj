@@ -31,6 +31,15 @@
 
 (FileUtils/forceMkdir (File. image-path))
 
+(defn refine-user-id-str [user_id]
+  (let [s (str user_id)
+        p (.indexOf s ".")]
+    (if (= p -1)
+      s
+      (.substring s 0 p)
+      )
+    )
+  )
 
 (defn generate-huanxin-username [email]
   (sha1-hmac email huanxin-salt))
