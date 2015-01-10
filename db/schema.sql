@@ -58,3 +58,10 @@ CREATE TABLE friends (
   friend_id  INTEGER,
   created_at timestamp DEFAULT current_timestamp
 );
+
+CREATE TABLE feedbacks (
+  id         INTEGER PRIMARY KEY,
+  user_id    INTEGER,
+  content    TEXT,
+  created_at timestamp DEFAULT current_timestamp
+);

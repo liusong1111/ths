@@ -311,5 +311,12 @@
     ]
 
 
+## 发送用户反馈意见
+
+    curl -X POST http://127.0.0.1:3000/feedbacks.json -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"  -H "Content-Type:application/json" -d '{"content":"就是任性"}'
+
+    response:
+    {"created_at":"2015-01-10 13:53:31","content":"就是任性","user_id":1,"id":1}
+
 
 

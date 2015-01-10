@@ -46,6 +46,8 @@
 
 (defentity friends)
 
+(defentity feedbacks)
+
 ;; ------------------
 
 ;; ------------------
@@ -359,6 +361,22 @@
             (with user_labels)
             (where {:id [in friend-ids]}))
     ))
+
+;; feedbacks
+(defn feedbacks-show [id]
+  (first (select feedbacks
+                 (where {:id id})
+                 (limit 1))))
+
+(defn feedbacks-create [user_id content]
+  (-> (insert feedbacks
+              (values {
+                       :user_id user_id
+                       :content content
+                       }))
+      ((keyword "last_insert_rowid()"))
+      (feedbacks-show)
+      ))
 
 (defn -main []
   (println (json/generate-string (topics-show 1)))

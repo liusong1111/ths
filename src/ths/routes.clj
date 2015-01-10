@@ -190,6 +190,10 @@
 (defn friends-index [user_id]
   (json-response (m/friends-index user_id)))
 
+;; feedbacks
+(defn feedbacks-create [user_id content]
+  (json-response (m/feedbacks-create user_id content)))
+
 (defroutes app-routes
            (GET "/" [] "Hello World")
 
@@ -251,6 +255,9 @@
            (POST "/invitations/:id/refuse.json" [current_user_id id] (invitations-refuse current_user_id id))
            (DELETE "/friends/:friend_id.json" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
            (GET "/users/:id/friends.json" [id] (friends-index id))
+
+           ;; feedback
+           (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
 
            (route/not-found "Not Found"))
 
