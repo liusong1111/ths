@@ -1,18 +1,23 @@
 (ns ths.routes
   (:import (org.apache.commons.io FileUtils)
            (java.io File))
-  (:require [compojure.core :refer :all]
-            [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults]]
-            ;[ring.middleware.json :refer [wrap-json-params wrap-json-response]]
-            [ring.middleware.format-params :refer [wrap-restful-params]]
-            [com.postspectacular.rotor :as rotor]
-            [clojure.java.io :as io]
-            [taoensso.timbre :as timbre]
-            [ths.models :as m]
-            [ths.huanxin :as h]
-            [cheshire.core :as json]
-            [postal.core :as mailer])
+  (:require
+    ;[compojure.core :refer :all]
+    [compojure.route :as route]
+    [compojure.api.legacy :refer :all]
+    [ring.middleware.defaults :refer [wrap-defaults]]
+    ;[ring.middleware.json :refer [wrap-json-params wrap-json-response]]
+    [ring.middleware.format-params :refer [wrap-restful-params]]
+    [com.postspectacular.rotor :as rotor]
+    [clojure.java.io :as io]
+    [taoensso.timbre :as timbre]
+    [ths.models :as m]
+    [ths.huanxin :as h]
+    [cheshire.core :as json]
+    [postal.core :as mailer]
+    [ring.util.http-response :refer [ok]]
+    [schema.core :as s]
+    [compojure.api.sweet :refer :all])
   (:use ths.utils)
   )
 
@@ -194,72 +199,86 @@
 (defn feedbacks-create [user_id content]
   (json-response (m/feedbacks-create user_id content)))
 
-(defroutes app-routes
-           (GET "/" [] "Hello World")
+(defroutes* legacy-app-routes
+            (GET "/" [] "Hello World")
 
-           (GET "/demo.json" [current_user_email] (json-response {:code "OK" :message (str "welcome:" current_user_email)}))
-           (POST "/demo.json" [name] (json-response {:code "OK" :message (str "created:" name)}))
-           (PUT "/demo.json" [name] (json-response {:code "OK" :message (str "updated:" name)}))
-           (DELETE "/demo.json" [name] (json-response {:code "OK" :message (str "deleted:" name)}))
+            (GET "/demo.json" [current_user_email] (json-response {:code "OK" :message (str "welcome:" current_user_email)}))
+            (POST "/demo.json" [name] (json-response {:code "OK" :message (str "created:" name)}))
+            (PUT "/demo.json" [name] (json-response {:code "OK" :message (str "updated:" name)}))
+            (DELETE "/demo.json" [name] (json-response {:code "OK" :message (str "deleted:" name)}))
 
-           ;; login
-           (POST "/login.json" [email password] (login email password))
-           ;; forget password
-           (POST "/forget_password.json" [email] (forget_password email))
+            ;; login
+            (POST "/login.json" [email password] (login email password))
+            ;; forget password
+            (POST "/forget_password.json" [email] (forget_password email))
 
-           ;; users
-           (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
-           (GET "/users/:id.json" [id] (users-show id))
-           (POST "/users.json" [username password email phone sex birth city image] (users-create username password email phone sex birth city image))
-           (PUT "/users/:id.json" {params :params} (let [id (:id params)
-                                                         image (:image params)
-                                                         attrs (-> (select-keys params [:username :password :email :phone :sex :birth :city])
-                                                                   (assoc :image (:filename image))
-                                                                   remove-blank-values
-                                                                   )] (users-update id attrs image)))
-           (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
-           (DELETE "/users/:id.json" [id] (users-destroy id))
+            ;; users
+            (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
+            (GET "/users/:id.json" [id] (users-show id))
+            (POST "/users.json" [username password email phone sex birth city image] (users-create username password email phone sex birth city image))
+            (PUT "/users/:id.json" {params :params} (let [id (:id params)
+                                                          image (:image params)
+                                                          attrs (-> (select-keys params [:username :password :email :phone :sex :birth :city])
+                                                                    (assoc :image (:filename image))
+                                                                    remove-blank-values
+                                                                    )] (users-update id attrs image)))
+            (PUT "/users/:id/update_labels.json" [id labels] (users-update-labels id labels))
+            (DELETE "/users/:id.json" [id] (users-destroy id))
 
-           (GET "/signs/*" [*]
-                (ring.util.response/response (File. (str image-path "/" *)))
-                )
+            (GET "/signs/*" [*]
+                 (ring.util.response/response (File. (str image-path "/" *)))
+                 )
 
-           ;; labels
-           (GET "/labels.json" [q] (labels-index q))
-           ; 不要了
-           ;(POST "/labels.json" [label_name] (labels-create label_name))
-           ;(DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
+            ;; labels
+            (GET "/labels.json" [q] (labels-index q))
+            ; 不要了
+            ;(POST "/labels.json" [label_name] (labels-create label_name))
+            ;(DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
 
-           ;; topics
-           (GET "/topics.json" [current_user_id user_id page] (topics-index current_user_id user_id (Integer. (or page "1"))))
-           (GET "/topics/:id.json" [id] (topics-show id))
-           (POST "/topics.json" [current_user_id subject body label_name] (topics-create current_user_id subject body label_name))
-           ;; 不要了
-           ;(PUT "/topics/:id.json" [id subject body label_name] (topics-update id subject body label_name))
-           ;(DELETE "/topics/:id.json" [id] (topics-destroy id))
+            ;; topics
+            (GET "/topics.json" [current_user_id user_id page] (topics-index current_user_id user_id (Integer. (or page "1"))))
+            (GET "/topics/:id.json" [id] (topics-show id))
+            (POST "/topics.json" [current_user_id subject body label_name] (topics-create current_user_id subject body label_name))
+            ;; 不要了
+            ;(PUT "/topics/:id.json" [id subject body label_name] (topics-update id subject body label_name))
+            ;(DELETE "/topics/:id.json" [id] (topics-destroy id))
 
-           ;; replies
-           (GET "/topics/:topic_id/replies.json" [topic_id] (topic-replies-index topic_id))
-           (POST "/topics/:topic_id/replies.json" [current_user_id topic_id body] (topic-replies-create current_user_id topic_id body))
-           ;; 不要了
-           ;(PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
-           ;(DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
+            ;; replies
+            (GET "/topics/:topic_id/replies.json" [topic_id] (topic-replies-index topic_id))
+            (POST "/topics/:topic_id/replies.json" [current_user_id topic_id body] (topic-replies-create current_user_id topic_id body))
+            ;; 不要了
+            ;(PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
+            ;(DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
 
-           (GET "/recommendations.json" [current_user_id] (recommendations current_user_id))
-           (POST "/huanxin/hid2sids.json" [entries] (huanxin-hid2sids entries))
+            (GET "/recommendations.json" [current_user_id] (recommendations current_user_id))
+            (POST "/huanxin/hid2sids.json" [entries] (huanxin-hid2sids entries))
 
-           ;; friends
-           (GET "/users/:id/invitations.json" [id] (invitations-index id))
-           (POST "/invitations.json" [current_user_id invitee_id reason] (invitations-create current_user_id invitee_id reason))
-           (POST "/invitations/:id/agree.json" [current_user_id id] (invitations-agree current_user_id id))
-           (POST "/invitations/:id/refuse.json" [current_user_id id] (invitations-refuse current_user_id id))
-           (DELETE "/friends/:friend_id.json" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
-           (GET "/users/:id/friends.json" [id] (friends-index id))
+            ;; friends
+            (GET "/users/:id/invitations.json" [id] (invitations-index id))
+            (POST "/invitations.json" [current_user_id invitee_id reason] (invitations-create current_user_id invitee_id reason))
+            (POST "/invitations/:id/agree.json" [current_user_id id] (invitations-agree current_user_id id))
+            (POST "/invitations/:id/refuse.json" [current_user_id id] (invitations-refuse current_user_id id))
+            (DELETE "/friends/:friend_id.json" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
+            (GET "/users/:id/friends.json" [id] (friends-index id))
 
-           ;; feedback
-           (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
+            ;; feedback
+            (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
 
-           (route/not-found "Not Found"))
+            (route/not-found "Not Found"))
+
+(defapi app-routes
+        (swagger-ui)
+        (swagger-docs)
+        (swaggered "hello"
+                   :description "it's a hello"
+                   (GET* "/hi" []
+                         :query-params [q :- String]
+                         (ok {:total (str "hello," q)})
+                         )
+                   )
+        legacy-app-routes
+        )
+
 
 (def api-defaults
   "A default configuration for a HTTP API."
