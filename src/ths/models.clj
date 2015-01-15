@@ -36,7 +36,11 @@
            )
 
 (defentity replies
-           (belongs-to topics {:fk :topic_id}))
+           (belongs-to topics {:fk :topic_id})
+           (transform (fn [v]
+                        (-> v
+                            (assoc :user (first (select users (where {:id (:user_id v)}) (limit 1)))))))
+           )
 
 (defentity user_labels
            (belongs-to users {:fk :user_id})

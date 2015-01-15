@@ -273,6 +273,7 @@
                    :description "it's a hello"
                    (GET* "/hi" []
                          :query-params [q :- String]
+                         :summary "这是个HI，呼呼"
                          (ok {:total (str "hello," q)})
                          )
                    )
