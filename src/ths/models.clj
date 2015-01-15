@@ -284,15 +284,17 @@
   (delete replies
           (where {:id reply_id})))
 
-(defn recommendations [current_user_id]
+(defn recommendations [current_user_id page]
   (into
     (for [topic (select topics
-                        (limit 20))]
+                        (limit 20)
+                        (offset (* (- page 1) 20)))]
       (assoc topic :type "topic")
       )
     (for [user (select users
                        (with user_labels)
-                       (limit 20))]
+                       (limit 20)
+                       (offset (* (- page 1) 20)))]
       (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
       )
     )

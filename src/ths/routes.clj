@@ -162,8 +162,8 @@
 ;(defn topic-replies-destroy [topic_id reply_id]
 ;  (json-response (m/topic-replies-destroy topic_id reply_id)))
 
-(defn recommendations [current_user_id]
-  (json-response (m/recommendations current_user_id))
+(defn recommendations [current_user_id page]
+  (json-response (m/recommendations current_user_id page))
   )
 
 (defn huanxin-hid2sids [entries]
@@ -250,7 +250,7 @@
             ;(PUT "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id body] (topic-replies-update topic_id reply_id body))
             ;(DELETE "/topics/:topic_id/replies/:reply_id.json" [topic_id reply_id] (topic-replies-destroy topic_id reply_id))
 
-            (GET "/recommendations.json" [current_user_id] (recommendations current_user_id))
+            (GET "/recommendations.json" [current_user_id page] (recommendations current_user_id (Integer. (or page "1"))))
             (POST "/huanxin/hid2sids.json" [entries] (huanxin-hid2sids entries))
 
             ;; friends
