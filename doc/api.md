@@ -110,27 +110,48 @@
     curl http://127.0.0.1:3000/topics/1.json
     返回
     {
-      subject: "xxx",
-      label_name: "yyy",
-      body: "yyy",
-      user_id: 33,
-      user: {
-        username: "xx",
-        email: "xxx",
-        labels: ["xx", "yy"]
+      "user": {
+        "labels": [],
+        "email": "liusong1111@gmail.com",
+        "sex": "male",
+        "phone": null,
+        "city": "beijing",
+        "username": "liusong",
+        "huanxin_username": "4c36aba13d16f79ed79a29eec4bfbde0163e2d4f",
+        "id": 1,
+        "image": "/signs/1/0015.jpg",
+        "created_at": "2014-12-28 05:44:25",
+        "birth": "1980-01-01"
       },
-      created_at: "2014-11-33 ...",
-      replies: [
+      "replies": [
         {
-            body: "kkk",
-            user_id: 33,
-            created_at: "2014-11-13",
-            updated_at: "...",
-            user: {
-              image: "aa.jpg"
-            }
+          "user": {
+            "labels": [],
+            "email": "wu@gmail.com",
+            "sex": "male",
+            "phone": null,
+            "city": "beijing",
+            "username": "wu",
+            "huanxin_username": "0b1e2ab34877d89a38be262315ace928c4a6b764",
+            "id": 2,
+            "image": "/signs/2/0015.jpg",
+            "created_at": "2014-12-28 05:49:09",
+            "birth": "1980-01-01"
+          },
+          "created_at": "2014-12-28 05:58:57",
+          "user_id": 2,
+          "body": "爱怎么做怎么做",
+          "topic_id": 1,
+          "id": 1
         }
-      ]
+      ],
+      "created_at": "2014-12-28 05:58:01",
+      "huanxin_group_id": "1419746282317232",
+      "user_id": 1,
+      "label_name": "美食",
+      "body": "材料\n鲈鱼，葱，姜，料酒，李锦记蒸鱼豉油，油\n做法\n1.鲈鱼洗净，用葱姜料酒腌一会儿去腥。\n2.放蒸锅蒸８分钟，时间到不要开锅，再焐几分钟为好。\n3.把鱼取出，倒掉汁水。\n4.放上葱丝，浇上李锦记蒸鱼豉油，锅热油，再浇到鱼上。",
+      "subject": "清蒸鲈鱼怎么做？",
+      "id": 1
     }
 
 
@@ -208,12 +229,28 @@
     curl -X DELETE  -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"  http://127.0.0.1:3000/friends/2.json
 
 ## 得到某人的好友列表
-    curl http://127.0.0.1:3000/users/1/friends.json
+    curl http://127.0.0.1:3000/friends.json  -H "x-token:1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0"
+    返回：
+    [
+      {
+        "labels": [],
+        "email": "wu@gmail.com",
+        "sex": "male",
+        "phone": null,
+        "city": "beijing",
+        "username": "wu",
+        "huanxin_username": "0b1e2ab34877d89a38be262315ace928c4a6b764",
+        "id": 2,
+        "image": "/signs/2/0015.jpg",
+        "created_at": "2014-12-28 05:49:09",
+        "birth": "1980-01-01"
+      }
+    ]
 
 # 首页
 
 ## 找签客首页
-    curl http://127.0.0.1:3000/recommendations.json
+    curl http://127.0.0.1:3000/recommendations.json?page=1
     response:
     [
       {

@@ -259,7 +259,7 @@
             (POST "/invitations/:id/agree.json" [current_user_id id] (invitations-agree current_user_id id))
             (POST "/invitations/:id/refuse.json" [current_user_id id] (invitations-refuse current_user_id id))
             (DELETE "/friends/:friend_id.json" [current_user_id friend_id] (friends-destroy current_user_id friend_id))
-            (GET "/users/:id/friends.json" [id] (friends-index id))
+            (GET "/friends.json" [current_user_id] (friends-index current_user_id))
 
             ;; feedback
             (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
