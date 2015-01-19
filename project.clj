@@ -25,6 +25,7 @@
                            [metosin/compojure-api "0.17.0"]
                            [metosin/ring-http-response "0.5.2"]
                            [metosin/ring-swagger-ui "2.0.24"]
+                           [crypto-random "1.2.0"]
                            ]
             :plugins [[lein-ring "0.8.13"]]
             :ring {:handler ths.routes/app

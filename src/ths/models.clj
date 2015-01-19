@@ -116,6 +116,13 @@
                  (where {:huanxin_username huanxin-username})
                  (limit 1))))
 
+(defn users-by-email [email]
+  (first (select users
+                 (with user_labels)
+                 (where {:email email})
+                 (limit 1))))
+
+
 (defn users-create [username password email phone sex birth city huanxin_username image]
   (-> (insert users
               (values {:username         username
@@ -390,9 +397,9 @@
       (feedbacks-show)
       ))
 
-(defn -main []
-  (println (json/generate-string (topics-show 1)))
-  )
+;(defn -main []
+;  (println (json/generate-string (topics-show 1)))
+;  )
 
 
 

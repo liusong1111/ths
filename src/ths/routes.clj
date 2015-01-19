@@ -13,11 +13,12 @@
     [taoensso.timbre :as timbre]
     [ths.models :as m]
     [ths.huanxin :as h]
+    [ths.email :as mailer]
     [cheshire.core :as json]
-    [postal.core :as mailer]
     [ring.util.http-response :refer [ok]]
     [schema.core :as s]
-    [compojure.api.sweet :refer :all])
+    [compojure.api.sweet :refer :all]
+    [crypto.random :as crypto])
   (:use ths.utils)
   )
 
@@ -55,9 +56,16 @@
   )
 
 (defn forget_password [email]
-  (json-response {
-                  :code "ok"
-                  })
+  (when-let [user (m/users-by-email email)]
+    (when-let [password (rand-str 8)]
+      (m/users-update (:id user) {:password password})
+      (mailer/send-email-for-forget-password (:username user) password email)
+      (json-response {
+                      :code "ok"
+                      })
+      )
+    )
+
   )
 
 ;; users
@@ -305,10 +313,5 @@
 ;                                                     :tempfile (File. "/Users/sliu/devices.sql")
 ;                                                     }))
 
-(defn -main []
-  (println (mailer/send-message {
-                                 :from    "liusong1111@gmail.com"
-                                 :to      ["liusong1111@gmail.com"]
-                                 :subject "这是一个测试"
-                                 :body    "哈哈\n呼呼"
-                                 })))
+;(defn -main []
+;  (println (crypto/base32 8)))

@@ -14,6 +14,18 @@
 (defn remove-blank-values [record]
   (into {} (filter second record)))
 
+(defn char-range [start-char end-char]
+  (map char (range (int start-char) (inc (int end-char))))
+  )
+
+(def safe-chars
+  (remove #{\0 \o \1 \l \2 \z \6 \b \9 \g \q} (concat (char-range \a \z) (char-range \0 \9)))
+  )
+
+(defn rand-str [len]
+  (apply str (repeatedly len #(rand-nth safe-chars)))
+  )
+
 ; 数据库路径
 (def db-path "ths.db")
 
@@ -84,3 +96,6 @@
 
 ;(defn -main []
 ;  (println (parse-login-token "1;liusong1111@gmail.com;d4b629a80934567e04530ebbd2fbe4e128e85ed0")))
+
+;(defn -main []
+;  (println (rand-str 8)))

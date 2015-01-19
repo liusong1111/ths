@@ -1,6 +1,6 @@
 # 极光推送（有好友请求）
 
-# 忘记密码，发送重置密码到邮箱（server api:
+# (OK) 忘记密码，发送重置密码到邮箱（server api:
 POST /forget_password?email=xx@yy
 
 # (OK) 话题回复列表少了回复者的基本信息，而且回复内容为空。
