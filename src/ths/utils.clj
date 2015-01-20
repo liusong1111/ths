@@ -41,6 +41,11 @@
 ; huanxin
 (def huanxin-url-root "http://a1.easemob.com/tonghang/tonghang")
 
+; jpush
+(def jpush-master-secret "ed32167a8641ab1ee8658b3a")
+
+(def jpush-app-key "eb4e79c4ab182d725ec2ff15")
+
 (FileUtils/forceMkdir (File. image-path))
 
 (defn refine-user-id-str [user_id]

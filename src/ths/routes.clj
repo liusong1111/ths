@@ -18,7 +18,8 @@
     [ring.util.http-response :refer [ok]]
     [schema.core :as s]
     [compojure.api.sweet :refer :all]
-    [crypto.random :as crypto])
+    [crypto.random :as crypto]
+    [ths.jpush :as jpush])
   (:use ths.utils)
   )
 
@@ -189,7 +190,14 @@
   (json-response (m/invitations-index user_id)))
 
 (defn invitations-create [current_user_id invitee_id reason]
-  (json-response (m/invitations-create current_user_id invitee_id reason)))
+  (let [inviter (m/users-show current_user_id)
+        invitee (m/users-show invitee_id)
+        inviter-username (:username inviter)
+        invitee-huanxin-username (:huanxin_username invitee)]
+    (jpush/jpush-it invitee-huanxin-username (str inviter-username "请求加您为好友"))
+    (json-response (m/invitations-create current_user_id invitee_id reason))
+    )
+  )
 
 (defn invitations-agree [current_user_id invitation_id]
   (json-response (m/invitations-agree current_user_id invitation_id)))

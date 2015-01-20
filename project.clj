@@ -26,8 +26,13 @@
                            [metosin/ring-http-response "0.5.2"]
                            [metosin/ring-swagger-ui "2.0.24"]
                            [crypto-random "1.2.0"]
+                           [cn.jpush.api/jpush-client "3.2.3"]
                            ]
-            :plugins [[lein-ring "0.8.13"]]
+            :main "ths.jpush"
+            :plugins [
+                      [lein-ring "0.8.13"]
+                      [lein-bin "0.3.4"]
+                      ]
             :ring {:handler ths.routes/app
                    :init    ths.routes/init
                    :destroy ths.routes/destroy
