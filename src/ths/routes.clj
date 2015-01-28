@@ -165,8 +165,8 @@
         reply (m/topic-replies-create current_user_id topic_id body)
         topic (m/topics-show topic_id)
         huanxin_group_id (:huanxin_group_id topic)
-        _ (h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username image-url user-id)
         _ (h/groups-add-member huanxin_group_id huanxin_username)
+        _ (h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username image-url user-id)
         ]
     (json-response reply)
     )
