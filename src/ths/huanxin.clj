@@ -123,7 +123,7 @@
   (http-request :post (str "/chatgroups/" huanxin-group-id "/users/" huanxin-username)))
 
 ; 发送文本消息
-(defn messages-post-text [target_type target msg from]
+(defn messages-post-text [target_type target msg from image-url user-id]
   (http-request :post "/messages" {
                                    ;users 给用户发消息, chatgroups 给群发消息
                                    :target_type target_type
@@ -142,7 +142,10 @@
                                    :from        from
 
                                    ;扩展属性, 由app自己定义.可以没有这个字段，但是如果有，值不能是“ext:null“这种形式，否则出错
-                                   ;:ext {}
+                                   :ext {
+                                         :imageurl (str image-url)
+                                         :userid (str user-id)
+                                         }
                                    }))
 
 (defn -main []

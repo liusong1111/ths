@@ -153,11 +153,13 @@
 (defn topic-replies-create [current_user_id topic_id body]
   (let [
         user (m/users-show current_user_id)
+        user-id (:id user)
         huanxin_username (:huanxin_username user)
+        image-url (:image user)
         reply (m/topic-replies-create current_user_id topic_id body)
         topic (m/topics-show topic_id)
         huanxin_group_id (:huanxin_group_id topic)
-        _ (h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username)
+        _ (h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username image-url user-id)
         _ (h/groups-add-member huanxin_group_id huanxin_username)
         ]
     (json-response reply)
