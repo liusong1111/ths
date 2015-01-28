@@ -77,15 +77,21 @@
   (json-response (m/users-show id)))
 
 (defn users-create [username password email phone sex birth city image]
-  (let [huanxin_username (generate-huanxin-username email)
-        user (m/users-create username password email phone sex birth city huanxin_username (:filename image))
-        user_id (:id user)
-        sign-image-path (str image-path "/" (refine-user-id-str user_id))
-        _ (when (:tempfile image)
-            (FileUtils/forceMkdir (File. sign-image-path))
-            (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
-    (h/users-create huanxin_username password username)
-    (json-response user)
+  (if-let [conflict-user (m/users-by-email email)]
+    (json-response {
+                    :code    "error"
+                    :message "输入邮箱已存在"
+                    })
+    (let [huanxin_username (generate-huanxin-username email)
+          user (m/users-create username password email phone sex birth city huanxin_username (:filename image))
+          user_id (:id user)
+          sign-image-path (str image-path "/" (refine-user-id-str user_id))
+          _ (when (:tempfile image)
+              (FileUtils/forceMkdir (File. sign-image-path))
+              (io/copy (:tempfile image) (io/file sign-image-path (:filename image))))]
+      (h/users-create huanxin_username password username)
+      (json-response user)
+      )
     )
   )
 

@@ -53,6 +53,9 @@
     {"labels":[],"email":"liusong1111@gmail.com","sex":"male","phone":null,"city":"beijing","username":"sliu1","huanxin_username":"4c36aba13d16f79ed79a29eec4bfbde0163e2d4f","id":1,"image":"http://10.0.2.2:3000/signs/1/0015.jpg","created_at":"2014-12-25 09:26:53","birth":"1980-01-01"}
     注: 本步server会在环信上注册帐号，用户名为对email的sha1编码。
     response里含huanxin_username字段
+    如果注册出错，则返回类似
+    {"code": "error", "message": "输入邮箱已存在"}
+    可判断是否code值为"error"，如果是，提示message对应的值
 
 ## 修改用户信息
     curl -X PUT http://127.0.0.1:3000/users/1.json -F "username=sliu" -F "password=aaaaaa" -F "email=liusong1111@gmail.com" -F "sex=male" -F "birth=1980-01-01"
