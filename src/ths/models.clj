@@ -74,10 +74,14 @@
   (if topic_id
     (distinct (concat
                 (select users
+                        (join user_labels)
+                        (with user_labels)
                         (join topics)
                         (where {:topics.id topic_id})
                         )
                 (select users
+                        (join user_labels)
+                        (with user_labels)
                         (join replies (= :replies.user_id :users.id))
                         (where {:replies.topic_id topic_id})
                         )
