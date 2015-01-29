@@ -70,8 +70,8 @@
   )
 
 ;; users
-(defn users-index [q label_name page]
-  (json-response (m/users-all q label_name page)))
+(defn users-index [q label_name topic_id page]
+  (json-response (m/users-all q label_name topic_id page)))
 
 (defn users-show [id]
   (json-response (m/users-show id)))
@@ -237,7 +237,7 @@
             (POST "/forget_password.json" [email] (forget_password email))
 
             ;; users
-            (GET "/users.json" [q label_name page] (users-index q label_name (Integer. (or page "1"))))
+            (GET "/users.json" [q label_name topic_id page] (users-index q label_name topic_id (Integer. (or page "1"))))
             (GET "/users/:id.json" [id] (users-show id))
             (POST "/users.json" [username password email phone sex birth city image] (users-create username password email phone sex birth city image))
             (PUT "/users/:id.json" {params :params} (let [id (:id params)

@@ -70,37 +70,32 @@
                  (limit 1)))
   )
 
-;; users
-;(defn users-all [q label_name topic_id page]
-;  (cond-> (select* users)
-;          true (join user_labels)
-;          true (with user_labels)
-;          (not (clojure.string/blank? q)) (where (or {(keyword "user_labels.label_name") [like (str "%" q "%")]} {:username [like (str "%" q "%")]}))
-;          (not (clojure.string/blank? label_name)) (where {(keyword "user_labels.label_name") label_name})
-;          (not (clojure.string/blank? topic_id)) (-> (join topics) (join replies (= :replies.topic_id :topics.id))
-;                                                     (where (or {(keyword "topics.id") topic_id} {(keyword "replies.topic_id") topic_id}))
-;                                                     )
-;          true (limit 20)
-;          true (offset (* (- page 1) 20))
-;          ;true (as-sql)
-;          ;true (println)
-;          true (select)
-;
-;          ))
+(defn users-all [q label_name topic_id page]
+  (if topic_id
+    (distinct (concat
+                (select users
+                        (join topics)
+                        (where {:topics.id topic_id})
+                        )
+                (select users
+                        (join replies (= :replies.user_id :users.id))
+                        (where {:replies.topic_id topic_id})
+                        )
+                ))
+    (cond-> (select* users)
+            true (join user_labels)
+            true (with user_labels)
+            (not (clojure.string/blank? q)) (where (or {:user_labels.label_name [like (str "%" q "%")]} {:username [like (str "%" q "%")]}))
+            (not (clojure.string/blank? label_name)) (where {:user_labels.label_name label_name})
+            true (limit 20)
+            true (offset (* (- page 1) 20))
+            ;true (as-sql)
+            ;true (println)
+            true (select)
 
-(defn users-all [q label_name page]
-  (cond-> (select* users)
-          true (join user_labels)
-          true (with user_labels)
-          (not (clojure.string/blank? q)) (where (or {(keyword "user_labels.label_name") [like (str "%" q "%")]} {:username [like (str "%" q "%")]}))
-          (not (clojure.string/blank? label_name)) (where {(keyword "user_labels.label_name") label_name})
-          true (limit 20)
-          true (offset (* (- page 1) 20))
-          ;true (as-sql)
-          ;true (println)
-          true (select)
-
-          ))
+            )
+    )
+  )
 
 
 

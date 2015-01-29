@@ -36,6 +36,6 @@
   )
 
 (defn -main []
-  (jpush-it "user1-alias" "hahaha")
+  ;(jpush-it "user1-alias" "hahaha")
   ;(println "kkk")
   )

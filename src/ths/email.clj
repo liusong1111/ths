@@ -22,6 +22,6 @@
   )
 
 (defn -main []
-  (send-email-for-forget-password "刘松" "111111" "42279444@qq.com")
+  ;(send-email-for-forget-password "刘松" "111111" "42279444@qq.com")
   )
 

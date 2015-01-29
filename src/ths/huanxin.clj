@@ -149,9 +149,10 @@
                                    }))
 
 (defn -main []
-  (println "fetching...")
-  (println (get-token))
-  ;(println @(users-create "liusong" "liusong" nil))
-  ;(println @(users-update-password "liusong" "liusong1"))
-  ;(println @(users-update-password "4c36aba13d16f79ed79a29eec4bfbde0163e2d4f" "liusong"))
-  (println "ok!"))
+  ;(println "fetching...")
+  ;(println (get-token))
+  ;;(println @(users-create "liusong" "liusong" nil))
+  ;;(println @(users-update-password "liusong" "liusong1"))
+  ;;(println @(users-update-password "4c36aba13d16f79ed79a29eec4bfbde0163e2d4f" "liusong"))
+  ;(println "ok!")
+  )
