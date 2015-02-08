@@ -20,13 +20,14 @@
                            [org.clojure/data.codec "0.1.0"]
                            [http-kit "2.1.16"]
                            [cheshire "5.3.1"]
-                           [clj-time "0.8.0"]
+                           [clj-time "0.9.0"]
                            [com.draines/postal "1.11.3"]
                            [metosin/compojure-api "0.17.0"]
                            [metosin/ring-http-response "0.5.2"]
                            [metosin/ring-swagger-ui "2.0.24"]
                            [crypto-random "1.2.0"]
                            [cn.jpush.api/jpush-client "3.2.3"]
+                           [im.chit/cronj "1.4.3"]
                            ]
             :main "ths.jpush"
             :plugins [

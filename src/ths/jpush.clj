@@ -28,6 +28,8 @@
          )
        (catch APIRequestException e
          (println e)
+         (println audience)
+         (println content)
          (println (.getStatus e))
          (println (.getErrorCode e))
          (println (.getErrorMessage e))

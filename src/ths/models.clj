@@ -1,6 +1,7 @@
 (ns ths.models
   (:require [clojure.string :as str]
-            [cheshire.core :as json])
+            [cheshire.core :as json]
+            [clj-time.core :as t])
   (:use korma.config
         korma.core
         korma.db
@@ -68,6 +69,20 @@
                          :password password})
                  (with user_labels (with labels))
                  (limit 1)))
+  )
+
+(defn record-login [user_id]
+  (update users
+          (set-fields {:last_login_at (t/now)})
+          (where {:id user_id})
+          )
+  )
+
+(defn users-not-login-today []
+  (select users
+          (where (or {:last_login_at nil} {:last_login_at [< (t/plus (t/now) (t/days -1))]}))
+          (where {:huanxin_username [not= nil]})
+          (order :last_login_at :ASC))
   )
 
 (defn users-all [q label_name topic_id page]

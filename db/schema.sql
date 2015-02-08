@@ -9,7 +9,8 @@ CREATE TABLE users (
   city             char(255),
   image            char(255),
   huanxin_username char(255),
-  created_at       timestamp DEFAULT current_timestamp
+  created_at       timestamp DEFAULT current_timestamp,
+  last_login_at    timestamp
 );
 
 CREATE TABLE labels (

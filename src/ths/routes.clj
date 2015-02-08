@@ -19,9 +19,34 @@
     [schema.core :as s]
     [compojure.api.sweet :refer :all]
     [crypto.random :as crypto]
-    [ths.jpush :as jpush])
+    [ths.jpush :as jpush]
+    [cronj.core :as cronj])
   (:use ths.utils)
   )
+
+(defn notify-using-app-handler [t opts]
+  (let [users (m/users-not-login-today)]
+    (doall
+      (for [user users]
+        (let [huanxin_username (:huanxin_username user)
+              content (str (:username user) "，您已经一天没看同行了，快来看看吧")
+              ]
+          (jpush/jpush-it huanxin_username content)
+          )
+        )
+      ))
+  (timbre/info "notify-using-app")
+  )
+
+(def notify-using-app-job
+  (cronj/cronj :entries [{
+                          :id       "notify-using-app"
+                          :handler  notify-using-app-handler
+                          :schedule "0 0 19 * * * *"        ;每天19点发一次
+                          ;:schedule "0 * * * * * *"
+                          ;:schedule "/2 * * * * * *"
+                          :opts     {}
+                          }]))
 
 (defn init []
   (timbre/set-config! [:timestamp-pattern] "yyyy-MM-dd HH:mm:ss")
@@ -36,19 +61,25 @@
     [:shared-appender-config :rotor]
     {:path "production.log" :max-size (* 1024 1024) :backlog 100})
 
+  (cronj/start! notify-using-app-job)
   (timbre/info "TongHang Server is starting"))
 
 (defn destroy []
+  (cronj/stop! notify-using-app-job)
   (timbre/info "TongHang Server is shutting down"))
 
 (defn login [email password]
   (let [user (m/auth email password)]
     (if user
-      (json-response {
-                      :code  "ok"
-                      :token (generate-login-token (:id user) email)
-                      :user  user
-                      })
+      (do
+        (m/record-login (:id user))
+        (json-response {
+                        :code  "ok"
+                        :token (generate-login-token (:id user) email)
+                        :user  user
+                        })
+        )
+
       (json-response {
                       :code    "fail"
                       :message "用户名或密码不正确"
@@ -335,3 +366,6 @@
 
 ;(defn -main []
 ;  (println (crypto/base32 8)))
+
+;(defn -main []
+;  (notify-using-app-handler nil nil))
