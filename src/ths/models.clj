@@ -195,9 +195,11 @@
           (where {:label_name label_name})))
 
 ;; topics
-(defn topics-index [current_user_id user_id page]
+(defn topics-index [current_user_id q label_name user_id page]
   (cond-> (select* topics)
           (not (clojure.string/blank? user_id)) (where {:user_id user_id})
+          (not (clojure.string/blank? q)) (where (or {:subject [like (str "%" q "%")]} {:body [like (str "%" q "%")]}))
+          (not (clojure.string/blank? label_name)) (where {:label_name label_name})
           true (order :created_at :DESC)
           true (limit 20)
           true (offset (* (- page 1) 20))

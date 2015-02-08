@@ -127,8 +127,8 @@
   (json-response (m/labels-destroy label_name)))
 
 ;; topics
-(defn topics-index [current_user_id user_id page]
-  (json-response (m/topics-index current_user_id user_id page)))
+(defn topics-index [current_user_id q label_name user_id page]
+  (json-response (m/topics-index current_user_id q label_name user_id page)))
 
 (defn topics-show [id]
   (json-response (m/topics-show id)))
@@ -264,7 +264,7 @@
             ;(DELETE "/labels/:label_name.json" [label_name] (labels-destroy label_name))
 
             ;; topics
-            (GET "/topics.json" [current_user_id user_id page] (topics-index current_user_id user_id (Integer. (or page "1"))))
+            (GET "/topics.json" [current_user_id q label_name user_id page] (topics-index current_user_id q label_name user_id (Integer. (or page "1"))))
             (GET "/topics/:id.json" [id] (topics-show id))
             (POST "/topics.json" [current_user_id subject body label_name] (topics-create current_user_id subject body label_name))
             ;; 不要了
