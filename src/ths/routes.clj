@@ -15,6 +15,7 @@
     [ths.huanxin :as h]
     [ths.email :as mailer]
     [cheshire.core :as json]
+    [ring.util.response :refer [file-response]]
     [ring.util.http-response :refer [ok]]
     [schema.core :as s]
     [compojure.api.sweet :refer :all]
@@ -260,6 +261,8 @@
 
 (defroutes* legacy-app-routes
             (GET "/" [] "Hello World")
+
+            (GET "/download/peer.apk" [] (file-response "peer.apk"))
 
             (GET "/demo.json" [current_user_email] (json-response {:code "OK" :message (str "welcome:" current_user_email)}))
             (POST "/demo.json" [name] (json-response {:code "OK" :message (str "created:" name)}))
