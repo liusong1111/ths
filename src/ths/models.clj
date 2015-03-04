@@ -91,12 +91,14 @@
                 (select users
                         (join user_labels)
                         (with user_labels)
+                        (modifier "DISTINCT")
                         (join topics)
                         (where {:topics.id topic_id})
                         )
                 (select users
                         (join user_labels)
                         (with user_labels)
+                        (modifier "DISTINCT")
                         (join replies (= :replies.user_id :users.id))
                         (where {:replies.topic_id topic_id})
                         )
@@ -104,6 +106,7 @@
     (cond-> (select* users)
             true (join user_labels)
             true (with user_labels)
+            true (modifier "DISTINCT")
             (not (clojure.string/blank? q)) (where (or {:user_labels.label_name [like (str "%" q "%")]} {:username [like (str "%" q "%")]}))
             (not (clojure.string/blank? label_name)) (where {:user_labels.label_name label_name})
             true (limit 20)
@@ -316,6 +319,7 @@
            )
          (for [user (select users
                             (with user_labels)
+                            (modifier "DISTINCT")
                             (limit 20)
                             (offset (* (- page 1) 20)))]
            (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
@@ -397,6 +401,7 @@
         ]
     (select users
             (with user_labels)
+            (modifier "DISTINCT")
             (where {:id [in friend-ids]}))
     ))
 
