@@ -327,7 +327,7 @@
                               (join user_labels)
                               (with user_labels)
                               (where {:id [not= current_user_id]
-                                      :user_labels.label_name [in lables]
+                                      :user_labels.label_name [in labels]
                                       })
                               (modifier "DISTINCT")
                               (limit 20)
