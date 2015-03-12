@@ -311,23 +311,35 @@
           (where {:id reply_id})))
 
 (defn recommendations [current_user_id page]
-  (->> (into
-         (for [topic (select topics
-                             (limit 20)
-                             (offset (* (- page 1) 20)))]
-           (assoc topic :type "topic")
+  (let [user (users-show current_user_id)
+        labels (:labels user)
+        ]
+    (->> (into
+           (for [topic (select topics
+                               (where {:user_id    [not= current_user_id]
+                                       :label_name [in labels]
+                                       })
+                               (limit 20)
+                               (offset (* (- page 1) 20)))]
+             (assoc topic :type "topic")
+             )
+           (for [user (select users
+                              (join user_labels)
+                              (with user_labels)
+                              (where {:id [not= current_user_id]
+                                      :user_labels.label_name [in lables]
+                                      })
+                              (modifier "DISTINCT")
+                              (limit 20)
+                              (offset (* (- page 1) 20)))]
+             (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
+             )
            )
-         (for [user (select users
-                            (with user_labels)
-                            (modifier "DISTINCT")
-                            (limit 20)
-                            (offset (* (- page 1) 20)))]
-           (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
-           )
+         (sort-by :created_at)
+         (reverse)
          )
-       (sort-by :created_at)
-       (reverse)
-       )
+    )
+
   )
 
 

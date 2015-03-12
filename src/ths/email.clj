@@ -14,8 +14,8 @@
      ;:cc ""
      :subject "【同行】密码已重置"
      :body    (str "尊敬的" username "，您好！\n\n"
-                   "您的同行帐户密码已更改，最新密码是："
-                   new-password "\n请牢记新密码。\n\n"
+                   "您的同行帐户密码已更改，当前密码是："
+                   new-password "\n请及时更改成您熟悉的密码。\n\n"
                    "祝您使用快乐！")
      ;:X-Tra "else..."
      })
