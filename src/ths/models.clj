@@ -314,25 +314,43 @@
 (defn recommendations [current_user_id page]
   (let [user (users-show current_user_id)
         labels (:labels user)
+        -topics (select topics
+                        (where {:user_id    [not= current_user_id]
+                                :label_name [in labels]
+                                })
+                        (limit 20)
+                        (offset (* (- page 1) 20)))
+        -users (select users
+                       (join user_labels)
+                       (with user_labels)
+                       (where {:id                     [not= current_user_id]
+                               :user_labels.label_name [in labels]
+                               })
+                       (modifier "DISTINCT")
+                       (limit 20)
+                       (offset (* (- page 1) 20)))
+        -present? (> (count (into -topics -users)) 0)
+        -topics (if -present? -topics (select topics
+                                              (where {:user_id    [not= current_user_id]
+                                                      :label_name [not-in labels]
+                                                      })
+                                              (limit 20)
+                                              (offset 0)))
+        -users (if -present? -users (select users
+                                            (join user_labels)
+                                            (with user_labels)
+                                            (where {:id                     [not= current_user_id]
+                                                    :user_labels.label_name [not-in labels]
+                                                    })
+                                            (modifier "DISTINCT")
+                                            (limit 20)
+                                            (offset 0)))
         ]
     (->> (into
-           (for [topic (select topics
-                               (where {:user_id    [not= current_user_id]
-                                       :label_name [in labels]
-                                       })
-                               (limit 20)
-                               (offset (* (- page 1) 20)))]
+           (for [topic -topics]
              (assoc topic :type "topic")
              )
-           (for [user (select users
-                              (join user_labels)
-                              (with user_labels)
-                              (where {:id [not= current_user_id]
-                                      :user_labels.label_name [in labels]
-                                      })
-                              (modifier "DISTINCT")
-                              (limit 20)
-                              (offset (* (- page 1) 20)))]
+           (for [user -users]
              (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
              )
            )
