@@ -72,19 +72,24 @@
 (defn login [email password]
   (let [user (m/auth email password)]
     (if user
-      (do
-        (m/record-login (:id user))
+      (if (= (:status user) "封号")
         (json-response {
-                        :code  "ok"
-                        :token (generate-login-token (:id user) email)
-                        :user  user
+                        :code    "fail"
+                        :message "您已被同行管理员封号，如有疑问请联系我们"
                         })
+        (do
+          (m/record-login (:id user))
+          (json-response {
+                          :code  "ok"
+                          :token (generate-login-token (:id user) email)
+                          :user  user
+                          })
+          )
         )
-
       (json-response {
                       :code    "fail"
                       :message "用户名或密码不正确"
-                      } 401)
+                      })
       ))
   )
 
@@ -325,6 +330,19 @@
 
             ;; feedback
             (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
+            (GET "/push" [user_id content token]
+                 (if (not= token notify-key)
+                   (json-response {
+                                   :code "fail"
+                                   :message "TOKEN不正确"
+                                   })
+                   (let [user (m/users-show user_id)
+                         huanxin-user-name (:huanxin_username user)
+                         ]
+                     (jpush/jpush-it huanxin-user-name content)
+                     )
+                   )
+                 )
 
             (route/not-found "Not Found"))
 

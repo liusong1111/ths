@@ -46,6 +46,8 @@
 
 (def jpush-app-key "eb4e79c4ab182d725ec2ff15")
 
+(def notify-key "axced79c4ab182d725ec2ff15")
+
 (FileUtils/forceMkdir (File. image-path))
 
 (defn refine-user-id-str [user_id]

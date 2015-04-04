@@ -9,9 +9,11 @@
     #后续所有请求，请求的headers里，必须带一个头"x-token:收到的token"
     #huanxin_user是该用户在环信上的用户名
     如果登录失败，返回：
-    HTTP STATUS: 401
+    HTTP STATUS: 200
     HTTP BODY:
     {"code":"fail","message":"用户名或密码不正确"}
+    或者
+    {"code":"fail","message":"您已被同行管理员封号，如有疑问请联系我们"}
 
 # 忘记密码
     curl -X POST http://127.0.0.1:3000/forget_password.json -d "email=liusong1111@gmail.com"
@@ -410,5 +412,16 @@
     response:
     {"created_at":"2015-01-10 13:53:31","content":"就是任性","user_id":1,"id":1}
 
+## 由后台管理平台向api平台发消息，让api平台发送极光推送
+    curl -X GET "http://127.0.0.1:3000/push?user_id=1&content=您被管理员封号&token=abc"
+    response:
+    {"code": "ok", "message": ""}
+    
+    其中，user_id是users表中的id字段；content是要推送的正文;token是我们为了安全起见与后台管理平台约定好的密码。
+    "您被同行管理员封号，如有疑问请联系我们"
+    "您被同行管理员解封，如继续使用"
+    "您被同行管理员删除，如有疑问请联系我们"
+    
+    
 
 
