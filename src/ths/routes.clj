@@ -330,7 +330,7 @@
 
             ;; feedback
             (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
-            (GET "/push" [user_id content token]
+            (GET "/push.json" [user_id content token]
                  (if (not= token notify-key)
                    (json-response {
                                    :code    "fail"

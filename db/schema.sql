@@ -100,8 +100,8 @@ CREATE TABLE admins (
 CREATE TABLE system_config (
   id                   INTEGER PRIMARY KEY,
   can_register_user    BOOLEAN DEFAULT TRUE,
-  can_login                    DEFAULT TRUE,
-  can_upgrade_silently TRUE
+  can_login            BOOLEAN DEFAULT TRUE,
+  can_upgrade_silently BOOLEAN DEFAULT TRUE
 );
 
 INSERT INTO admins (idcard, worker_id, adder, username, password, provence, power, email, sex, phone, picture)

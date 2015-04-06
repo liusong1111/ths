@@ -456,7 +456,11 @@
       ))
 
 (defn system-config-index []
-  (first (select system_config))
+  (if-let [o (first (select system_config))]
+    (assoc o :can_register_user (= (:can_register_user o) 1)
+             :can_login (= (:can_login o) 1)
+             :can_upgrade_silently (= (:can_upgrade_silently o) 1))
+    )
   )
 
 ;(defn -main []

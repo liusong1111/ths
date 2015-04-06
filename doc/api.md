@@ -424,7 +424,7 @@
     
 
 ## 由后台管理平台向api平台发消息，让api平台发送极光推送
-    curl -X GET "http://127.0.0.1:3000/push?user_id=1&content=您被管理员封号&token=abc"
+    curl -X GET "http://127.0.0.1:3000/push.json?user_id=1&content=您被管理员封号&token=abc"
     response:
     {"code": "ok", "message": ""}
     
