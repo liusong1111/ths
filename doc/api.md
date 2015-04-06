@@ -411,6 +411,17 @@
 
     response:
     {"created_at":"2015-01-10 13:53:31","content":"就是任性","user_id":1,"id":1}
+    
+## 得到系统全局配置
+    curl http://127.0.0.1:3000/system_config.json
+    得到
+    {
+    "can_upgrade_silently": 0,
+    "can_login": 1,
+    "can_register_user": 1,
+    "id": 1
+    }
+    
 
 ## 由后台管理平台向api平台发消息，让api平台发送极光推送
     curl -X GET "http://127.0.0.1:3000/push?user_id=1&content=您被管理员封号&token=abc"
