@@ -330,11 +330,11 @@
 
             ;; feedback
             (POST "/feedbacks.json" [current_user_id content] (feedbacks-create current_user_id content))
-            (GET "/push.json" [user_id content token]
-                 (if (not= token notify-key)
+            (GET "/push.json" [user_id content secret]
+                 (if (not= secret notify-key)
                    (json-response {
                                    :code    "fail"
-                                   :message "TOKEN不正确"
+                                   :message "secret不正确"
                                    })
                    (let [user (m/users-show user_id)
                          huanxin-user-name (:huanxin_username user)

@@ -416,19 +416,21 @@
     curl http://127.0.0.1:3000/system_config.json
     得到
     {
-    "can_upgrade_silently": 0,
-    "can_login": 1,
-    "can_register_user": 1,
+    "can_upgrade_silently": false,
+    "can_login": true,
+    "can_register_user": true,
     "id": 1
     }
     
 
 ## 由后台管理平台向api平台发消息，让api平台发送极光推送
-    curl -X GET "http://127.0.0.1:3000/push.json?user_id=1&content=您被管理员封号&token=abc"
+    curl -X GET "http://127.0.0.1:3000/push.json?user_id=1&content=您被管理员封号&secret=axced79c4ab182d725ec2ff15"
     response:
-    {"code": "ok", "message": ""}
+    {"code": "ok"}
+    或
+    {"code" "fail", "message": "secret不正确"}
     
-    其中，user_id是users表中的id字段；content是要推送的正文;token是我们为了安全起见与后台管理平台约定好的密码。
+    其中，user_id是users表中的id字段；content是要推送的正文;secret是我们为了安全起见与后台管理平台约定好的密码。
     "您被同行管理员封号，如有疑问请联系我们"
     "您被同行管理员解封，如继续使用"
     "您被同行管理员删除，如有疑问请联系我们"
