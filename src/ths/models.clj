@@ -54,6 +54,9 @@
                             )))
            )
 
+(defentity system_config)
+
+
 (defentity friends)
 
 (defentity feedbacks)
@@ -451,6 +454,10 @@
       ((keyword "last_insert_rowid()"))
       (feedbacks-show)
       ))
+
+(defn system-config-index []
+  (first (select system_config))
+  )
 
 ;(defn -main []
 ;  (println (json/generate-string (topics-show 1)))

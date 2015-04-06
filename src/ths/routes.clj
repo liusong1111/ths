@@ -333,7 +333,7 @@
             (GET "/push" [user_id content token]
                  (if (not= token notify-key)
                    (json-response {
-                                   :code "fail"
+                                   :code    "fail"
                                    :message "TOKEN不正确"
                                    })
                    (let [user (m/users-show user_id)
@@ -345,6 +345,9 @@
                                      })
                      )
                    )
+                 )
+            (GET "/system_config.json" []
+                 (json-response (m/system-config-index))
                  )
 
             (route/not-found "Not Found"))
