@@ -340,6 +340,9 @@
                          huanxin-user-name (:huanxin_username user)
                          ]
                      (jpush/jpush-it huanxin-user-name content)
+                     (json-response {
+                                     :code "ok"
+                                     })
                      )
                    )
                  )
