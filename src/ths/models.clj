@@ -1,7 +1,9 @@
 (ns ths.models
   (:require [clojure.string :as str]
             [cheshire.core :as json]
-            [clj-time.core :as t])
+            [clj-time.core :as t]
+            [clojure.pprint :refer :all]
+            )
   (:use korma.config
         korma.core
         korma.db
@@ -317,37 +319,44 @@
 (defn recommendations [current_user_id page]
   (let [user (users-show current_user_id)
         labels (:labels user)
+        -offset (* (- page 1) 20)
+        -limit 20
+        -labels (clojure.string/join "," (map #(format "'%s'" %) labels))
+        _ (println -labels)
+        ;-labels ""
+        ;;labels-string (join "," labels)
+        sql-topics (str "select * from topics order by (label_name in (" -labels ")) DESC,created_at DESC limit  " -limit " offset " -offset)
+        sql-users (str "select distinct users.id  from users left outer join user_labels on user_labels.user_id = users.id order by (user_labels.label_name in (" -labels ")) DESC,users.created_at DESC limit  " -limit " offset " -offset)
+        topic-ids (map :id (exec-raw sql-topics :results))
+        user-ids (map :id (exec-raw sql-users :results))
+
         -topics (select topics
-                        (where {:user_id    [not= current_user_id]
-                                :label_name [in labels]
-                                })
-                        (limit 20)
-                        (offset (* (- page 1) 20)))
+                        (where {:id [in topic-ids]})
+                        )
         -users (select users
                        (join user_labels)
                        (with user_labels)
-                       (where {:id                     [not= current_user_id]
-                               :user_labels.label_name [in labels]
+                       (where {:id [in user-ids]
+                               ;:user_labels.label_name [in labels]
                                })
                        (modifier "DISTINCT")
-                       (limit 20)
-                       (offset (* (- page 1) 20)))
-        -present? (> (count (into -topics -users)) 0)
-        -topics (if -present? -topics (select topics
-                                              (where {:user_id    [not= current_user_id]
-                                                      :label_name [not-in labels]
-                                                      })
-                                              (limit 20)
-                                              (offset 0)))
-        -users (if -present? -users (select users
-                                            (join user_labels)
-                                            (with user_labels)
-                                            (where {:id                     [not= current_user_id]
-                                                    :user_labels.label_name [not-in labels]
-                                                    })
-                                            (modifier "DISTINCT")
-                                            (limit 20)
-                                            (offset 0)))
+                       )
+        ;-present? (> (count (into -topics -users)) 0)
+        ;-topics (if -present? -topics (select topics
+        ;                                      (where {:user_id    [not= current_user_id]
+        ;                                              :label_name [not-in labels]
+        ;                                              })
+        ;                                      (limit 20)
+        ;                                      (offset 0)))
+        ;-users (if -present? -users (select users
+        ;                                    (join user_labels)
+        ;                                    (with user_labels)
+        ;                                    (where {:id                     [not= current_user_id]
+        ;                                            :user_labels.label_name [not-in labels]
+        ;                                            })
+        ;                                    (modifier "DISTINCT")
+        ;                                    (limit 20)
+        ;                                    (offset 0)))
         ]
     (->> (into
            (for [topic -topics]
@@ -463,9 +472,12 @@
     )
   )
 
-;(defn -main []
-;  (println (json/generate-string (topics-show 1)))
-;  )
+(defn -main []
+  ;(pprint (map #(select-keys % [:label_name :labels]) (recommendations 1 1)))
+  (pprint (recommendations 1 1))
+  ;(pprint (recommendations 11 1))
+  ;(println (json/generate-string (topics-show 1)))
+  )
 
 
 
