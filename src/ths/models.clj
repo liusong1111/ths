@@ -13,6 +13,7 @@
 (declare users labels topics replies user_labels is-friend? users-show)
 
 (defdb db-spec (sqlite3 {:db db-path}))
+;(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
 
 (defentity users
            (has-many user_labels {:fk :user_id})
@@ -326,7 +327,7 @@
         ;-labels ""
         ;;labels-string (join "," labels)
         sql-topics (str "select * from topics order by (label_name in (" -labels ")) DESC,created_at DESC limit  " -limit " offset " -offset)
-        sql-users (str "select distinct users.id  from users left outer join user_labels on user_labels.user_id = users.id order by (user_labels.label_name in (" -labels ")) DESC,users.created_at DESC limit  " -limit " offset " -offset)
+        sql-users (str "select *,exists (select * from user_labels where label_name in (" -labels ") and user_labels.user_id = users.id) m from users order by m DESC, users.created_at DESC limit  " -limit " offset " -offset)
         topic-ids (map :id (exec-raw sql-topics :results))
         user-ids (map :id (exec-raw sql-users :results))
 
@@ -341,30 +342,14 @@
                                })
                        (modifier "DISTINCT")
                        )
-        ;-present? (> (count (into -topics -users)) 0)
-        ;-topics (if -present? -topics (select topics
-        ;                                      (where {:user_id    [not= current_user_id]
-        ;                                              :label_name [not-in labels]
-        ;                                              })
-        ;                                      (limit 20)
-        ;                                      (offset 0)))
-        ;-users (if -present? -users (select users
-        ;                                    (join user_labels)
-        ;                                    (with user_labels)
-        ;                                    (where {:id                     [not= current_user_id]
-        ;                                            :user_labels.label_name [not-in labels]
-        ;                                            })
-        ;                                    (modifier "DISTINCT")
-        ;                                    (limit 20)
-        ;                                    (offset 0)))
         ]
     (->> (into
-           (for [topic -topics]
-             (assoc topic :type "topic")
-             )
-           (for [user -users]
-             (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
-             )
+           (vec (for [user -users]
+                  (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
+                  ))
+           (vec (for [topic -topics]
+                  (assoc topic :type "topic")
+                  ))
            )
          (sort-by :created_at)
          (reverse)
@@ -474,7 +459,7 @@
 
 (defn -main []
   ;(pprint (map #(select-keys % [:label_name :labels]) (recommendations 1 1)))
-  (pprint (recommendations 1 1))
+  (pprint (recommendations 14 1))
   ;(pprint (recommendations 11 1))
   ;(println (json/generate-string (topics-show 1)))
   )
