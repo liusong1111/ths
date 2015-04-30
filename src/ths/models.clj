@@ -326,7 +326,7 @@
         _ (println -labels)
         ;-labels ""
         ;;labels-string (join "," labels)
-        sql-topics (str "select * from topics order by (label_name in (" -labels ")) DESC,created_at DESC limit  " -limit " offset " -offset)
+        sql-topics (str "select *,(label_name in (" -labels ")) m from topics order by m DESC,created_at DESC limit  " -limit " offset " -offset)
         sql-users (str "select *,exists (select * from user_labels where label_name in (" -labels ") and user_labels.user_id = users.id) m from users order by m DESC, users.created_at DESC limit  " -limit " offset " -offset)
         topic-ids (map :id (exec-raw sql-topics :results))
         user-ids (map :id (exec-raw sql-users :results))
@@ -334,24 +334,30 @@
         -topics (select topics
                         (where {:id [in topic-ids]})
                         )
-        -users (select users
-                       (join user_labels)
-                       (with user_labels)
-                       (where {:id [in user-ids]
-                               ;:user_labels.label_name [in labels]
-                               })
-                       (modifier "DISTINCT")
-                       )
+        -users (map #(users-show %) user-ids)
+        ; (select users
+        ;               (join user_labels)
+        ;               (with user_labels)
+        ;               (where {:id [in user-ids]
+        ;                       ;:user_labels.label_name [in labels]
+        ;                       })
+        ;               (modifier "DISTINCT")
+        ;               )
         ]
     (->> (into
            (vec (for [user -users]
-                  (assoc user :type "user" :is_friend (is-friend? current_user_id (:id user)))
+                  (assoc user :type "user"
+                              :is_friend (is-friend? current_user_id (:id user))
+                              :is_matched? (empty? (clojure.set/intersection (set labels) (set (:labels user)) ) )
+                              )
                   ))
            (vec (for [topic -topics]
-                  (assoc topic :type "topic")
+                  (assoc topic :type "topic"
+                               :is_matched? (empty? (clojure.set/intersection (set labels) (set (:labels topic)) ))
+                               )
                   ))
            )
-         (sort-by :created_at)
+         (sort-by #(vec (map % [:is_matched? :created_at])))
          (reverse)
          )
     )
