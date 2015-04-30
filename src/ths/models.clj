@@ -348,12 +348,12 @@
            (vec (for [user -users]
                   (assoc user :type "user"
                               :is_friend (is-friend? current_user_id (:id user))
-                              :is_matched? (empty? (clojure.set/intersection (set labels) (set (:labels user)) ) )
+                              :is_matched? (not (empty? (clojure.set/intersection (set labels) (set (:labels user)) ) ))
                               )
                   ))
            (vec (for [topic -topics]
                   (assoc topic :type "topic"
-                               :is_matched? (empty? (clojure.set/intersection (set labels) (set (:labels topic)) ))
+                               :is_matched? ((set labels) (:label-name topic))
                                )
                   ))
            )
