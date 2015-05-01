@@ -12,8 +12,8 @@
 
 (declare users labels topics replies user_labels is-friend? users-show)
 
-;(defdb db-spec (sqlite3 {:db db-path}))
-(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
+(defdb db-spec (sqlite3 {:db db-path}))
+;(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
 
 (defentity users
            (has-many user_labels {:fk :user_id})
