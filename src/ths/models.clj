@@ -323,6 +323,7 @@
         -offset (* (- page 1) 20)
         -limit 20
         -labels (clojure.string/join "," (map #(format "'%s'" %) labels))
+        _ (println page)
         _ (println -labels)
         ;-labels ""
         ;;labels-string (join "," labels)
