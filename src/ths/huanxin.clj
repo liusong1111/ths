@@ -112,7 +112,7 @@
 (defn groups-create [groupname owner]
   (http-request :post "/chatgroups" {
                                      :groupname groupname
-                                     :desc      ""
+                                     :desc      "ServerCreateGroup"
                                      :public    true
                                      :approval  false
                                      :owner     owner
