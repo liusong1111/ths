@@ -178,7 +178,7 @@
         user-id (:id user)
         {:keys [error result]} @(h/groups-create (str (:subject topic)) huanxin-username)
         huanxin-group-id (if (not error) (get-in result [:data :groupid]))
-        _ @(h/messages-post-text "chatgroups" [huanxin-group-id] body huanxin-username image-url user-id)
+        _ @(h/messages-post-text "chatgroups" [huanxin-group-id] body huanxin-username image-url user-id (:username user))
         _ (if (not error) (m/topics-update-huanxin-group-id (:id topic) huanxin-group-id))
         topic (assoc topic :huanxin_group_id huanxin-group-id)
         ]
@@ -207,7 +207,7 @@
         topic (m/topics-show topic_id)
         huanxin_group_id (:huanxin_group_id topic)
         _ @(h/groups-add-member huanxin_group_id huanxin_username)
-        _ @(h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username image-url user-id)
+        _ @(h/messages-post-text "chatgroups" [huanxin_group_id] body huanxin_username image-url user-id (:username user))
         ]
     (json-response reply)
     )
