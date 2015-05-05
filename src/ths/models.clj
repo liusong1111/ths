@@ -3,6 +3,7 @@
             [cheshire.core :as json]
             [clj-time.core :as t]
             [clojure.pprint :refer :all]
+            [ths.huanxin :as h]
             )
   (:use korma.config
         korma.core
@@ -12,8 +13,8 @@
 
 (declare users labels topics replies user_labels is-friend? users-show)
 
-(defdb db-spec (sqlite3 {:db db-path}))
-;(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
+;(defdb db-spec (sqlite3 {:db db-path}))
+(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
 
 (defentity users
            (has-many user_labels {:fk :user_id})
@@ -21,7 +22,8 @@
            (transform (fn [v]
                         (-> v
                             (assoc :labels (map :label_name (:user_labels v)))
-                            (dissoc :user_labels :password)
+                            ;(dissoc :user_labels :password)
+                            (dissoc :user_labels)
                             ;(assoc :image (if (str/blank? (:image v)) nil (str site-root "/signs/" (:id v) "/" (:image v))))
                             (assoc :image (if (str/blank? (:image v)) nil (str "/signs/" (:id v) "/" (:image v))))
                             )
@@ -466,9 +468,17 @@
 
 (defn -main []
   ;(pprint (map #(select-keys % [:label_name :labels]) (recommendations 1 1)))
-  (pprint (recommendations 14 1))
+  ;(pprint (recommendations 14 1))
   ;(pprint (recommendations 11 1))
   ;(println (json/generate-string (topics-show 1)))
+  (doall (for [{:keys [username huanxin_username password]} (select users)]
+           ;(println username huanxin_username password)
+           (do
+             (h/users-create huanxin_username password username)
+             (Thread/sleep 1000)
+             )
+           ))
+
   )
 
 
