@@ -12,8 +12,8 @@
 
 (declare users labels topics replies user_labels is-friend? users-show)
 
-(defdb db-spec (sqlite3 {:db db-path}))
-;(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
+;(defdb db-spec (sqlite3 {:db db-path}))
+(defdb db-spec (sqlite3 {:db "/Users/sliu/tmp/ths.db"}))
 
 (defentity users
            (has-many user_labels {:fk :user_id})
@@ -328,7 +328,7 @@
         ;-labels ""
         ;;labels-string (join "," labels)
         sql-topics (str "select *,(label_name in (" -labels ")) m from topics order by m DESC,created_at DESC limit  " -limit " offset " -offset)
-        sql-users (str "select *,exists (select * from user_labels where label_name in (" -labels ") and user_labels.user_id = users.id) m from users order by m DESC, users.created_at DESC limit  " -limit " offset " -offset)
+        sql-users (str "select *,exists (select * from user_labels where label_name in (" -labels ") and user_labels.user_id = users.id) m,(select count(1) from user_labels where user_labels.user_id = users.id) c from users where c > 0 order by m DESC, users.created_at DESC limit  " -limit " offset " -offset)
         topic-ids (map :id (exec-raw sql-topics :results))
         user-ids (map :id (exec-raw sql-users :results))
 
