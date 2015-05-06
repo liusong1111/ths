@@ -176,7 +176,7 @@
         huanxin-username (:huanxin_username user)
         image-url (:image user)
         user-id (:id user)
-        {:keys [error result]} @(h/groups-create (str (:subject topic)) huanxin-username)
+        {:keys [error result]} @(h/groups-create (str (:subject topic) "-" current_user_id "-" (rand-int 1000)) huanxin-username)
         huanxin-group-id (if (not error) (get-in result [:data :groupid]))
         _ @(h/messages-post-text "chatgroups" [huanxin-group-id] body huanxin-username image-url user-id (:username user))
         _ (if (not error) (m/topics-update-huanxin-group-id (:id topic) huanxin-group-id))
